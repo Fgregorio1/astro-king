@@ -1,23 +1,52 @@
+---
+import { SEO } from "astro-seo";
+import "../styles/global.css";
+
+interface Props {
+	title?: string;
+	description?: string;
+	lang?: string;
+}
+
+const { 
+	title = "King Kong® | Direct-Response Digital Marketing Agency", 
+	description = "The USA's Leading ROI-Driven Digital Agency. Grow Your Business With SEO ✔ Social Media Marketing ✔ PPC Management ✔ Call 888-303-8580 ☎",
+	lang = "pt-BR"
+} = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<SEO
+			title={title}
+			description={description}
+			openGraph={{
+				basic: {
+					title,
+					type: "website",
+					image: "https://kingkong.co/wp-content/uploads/2026/02/tile-nimble.png",
+				}
+			}}
+			extend={{
+				link: [{ rel: "sitemap", href: "/sitemap-index.xml" }],
+				meta: [
+					{ name: "twitter:image", content: "https://kingkong.co/wp-content/uploads/2026/02/tile-nimble.png" },
+					{ name: "twitter:title", content: title },
+					{ name: "twitter:description", content: description },
+				],
+			}}
+		/>
 	</head>
-	<body>
+	<body class="min-h-screen bg-background text-foreground font-sans antialiased">
 		<slot />
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

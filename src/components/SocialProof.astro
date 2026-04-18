@@ -1,0 +1,46 @@
+---
+const caseStudies = [
+  { name: "Nimble Transformation", img: "https://kingkong.co/wp-content/uploads/2026/02/tile-nimble.png" },
+  { name: "Scotland Titles", img: "https://kingkong.co/wp-content/uploads/2026/02/tile-scotland.png" },
+  { name: "My Muscle Chef", img: "https://kingkong.co/wp-content/uploads/2026/02/tile-muscle.png" },
+  { name: "Rent Buy It", img: "https://kingkong.co/wp-content/uploads/2026/02/tile-rentbuy.png" },
+  { name: "Original UGG Australia", img: "https://kingkong.co/wp-content/uploads/2026/02/tile-ugg.png" },
+  { name: "Aussie Environmental", img: "https://kingkong.co/wp-content/uploads/2026/02/tile-aussie.png" },
+];
+---
+
+<section class="py-24 bg-zinc-50 border-t border-zinc-200">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight text-zinc-950">
+      <span class="block">Battle Tested</span>
+      <span class="block text-red-600">Results</span>
+    </h2>
+    <p class="text-xl text-zinc-600 mb-16 max-w-2xl mx-auto">
+      Marketers lie, numbers don't. We've generated $7.8 billion for our clients, in 1067 different industries and niches.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {caseStudies.map(study => (
+        <a href="#" class="group relative overflow-hidden rounded-2xl aspect-[3/4] block bg-zinc-200">
+          <img 
+            src={study.img} 
+            alt={study.name} 
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+            loading="lazy"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-zinc-950/20 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6 text-left">
+            <h3 class="text-white text-2xl font-bold translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">{study.name}</h3>
+            <p class="text-red-400 mt-2 translate-y-4 opacity-0 transition-all duration-300 delay-75 group-hover:translate-y-0 group-hover:opacity-100 font-medium">Read Case Study &rarr;</p>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-16">
+      <a href="/case-studies" class="inline-flex h-14 items-center justify-center rounded-md bg-zinc-950 px-8 text-lg font-bold text-white shadow transition-colors hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950">
+        View All Case Studies
+      </a>
+    </div>
+  </div>
+</section>

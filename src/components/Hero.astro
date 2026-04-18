@@ -1,0 +1,167 @@
+---
+interface Props {
+  titleLine1?: string;
+  titleHighlight?: string;
+  titleLine2?: string;
+  titleLine3?: string;
+  subtitle?: string;
+  inputPlaceholder?: string;
+  inputPlaceholder2?: string;
+  buttonText?: string;
+  redirectUrl?: string;
+}
+
+const {
+  titleLine1 = "AQUISIÇÃO DE",
+  titleHighlight = "USA",
+  titleLine2 = "CLIENTES",
+  titleLine3 = "PARA LATINOS",
+  subtitle = "Te venderam a ideia que construir um negócio de prestação de serviços no USA é difícil. Nós te provamos o contrário!",
+  inputPlaceholder = "👋 Comece inserindo seu email",
+  inputPlaceholder2 = "Por favor, digite seu nome",
+  buttonText = "Avançar",
+  redirectUrl = "/reuniao-sessao-estrategica"
+} = Astro.props;
+---
+
+<section class="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden bg-[#0a0404] text-white min-h-[95vh] flex flex-col justify-center border-b-[6px] border-[#222]">
+  <!-- Video Background -->
+  <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+    <video class="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-15 mix-blend-screen" loop muted autoplay playsinline>
+      <source src="https://kingkong.co/wp-content/uploads/2021/05/hero-bg-video-2021.mp4" type="video/mp4" />
+    </video>
+  </div>
+  
+  <div class="container relative z-10 mx-auto px-4 w-full max-w-[1200px]">
+    
+    <h1 class="font-heading text-center leading-[0.9] tracking-tight mb-8 text-[clamp(4rem,10vw,8.5rem)] uppercase flex flex-col gap-2 md:gap-4">
+      <span class="block">{titleLine1} <span class="bg-[#FF5E00] px-3">{titleHighlight}</span></span>
+      <span class="block">{titleLine2}</span>
+      <span class="block">{titleLine3}</span>
+    </h1>
+    
+    <div class="w-full max-w-[800px] mx-auto text-center mb-10">
+      <p class="text-xl md:text-[22px] text-zinc-200 leading-[1.6] font-sans font-normal">
+        {subtitle}
+      </p>
+    </div>
+    
+    <div class="w-full text-center mt-4">
+      
+      <!-- Exact Form Layout -->
+      <form id="hero-form" class="max-w-[700px] mx-auto relative group" data-redirect-url={redirectUrl} onsubmit="event.preventDefault();">
+        <div class="flex flex-row bg-[#EBEBEB] rounded-full shadow-2xl transition-transform hover:-translate-y-1 duration-300 overflow-hidden relative">
+          <div class="flex-1 relative flex">
+            <!-- Step 1: Email -->
+            <input 
+              type="email" 
+              id="hero-email"
+              placeholder={inputPlaceholder}
+              class="w-full bg-transparent text-[#222] text-base sm:text-lg md:text-xl font-medium font-sans placeholder:text-zinc-600 placeholder:font-normal focus:outline-none py-5 px-4 sm:pl-8 transition-opacity duration-300"
+              required
+            />
+            <!-- Step 2: Name -->
+            <input 
+              type="text" 
+              id="hero-name"
+              placeholder={inputPlaceholder2}
+              class="absolute inset-0 w-full bg-[#EBEBEB] text-[#222] text-base sm:text-lg md:text-xl font-medium font-sans placeholder:text-zinc-600 placeholder:font-normal focus:outline-none py-5 px-4 sm:pl-8 opacity-0 pointer-events-none transition-opacity duration-300"
+              required
+              disabled
+            />
+          </div>
+          <button type="submit" class="w-auto shrink-0 bg-[#CFF127] text-zinc-950 font-black text-base sm:text-lg md:text-xl uppercase tracking-widest px-5 sm:px-10 py-5 transition-all relative overflow-hidden group/btn flex items-center justify-center">
+            
+            <!-- Flashy Diagonal Shine -->
+            <div class="absolute inset-0 w-full h-full -translate-x-[150%] skew-x-[-25deg] bg-gradient-to-r from-transparent via-white/70 to-transparent group-hover/btn:animate-[shine_0.5s_ease-in-out]"></div>
+            
+            <span class="relative z-10 flex items-center gap-1 sm:gap-2">
+              {buttonText}
+              <!-- Animated Thicker Arrow -->
+              <svg class="w-4 h-4 sm:w-6 sm:h-6 animate-[arrowSlide_1.5s_infinite_ease-in-out]" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Review Snippet -->
+    <div class="mt-10 flex flex-col items-center justify-center text-center font-sans">
+      <span class="text-sm text-zinc-400 max-w-[600px] mb-2 inline-flex flex-col md:flex-row items-center gap-2">
+        <span>*But it's 100% legal (pinky promise)</span>
+        <span class="hidden md:inline">|</span>
+        <a href="#" class="inline-flex items-center text-white hover:text-primary transition-colors gap-2">
+          <span class="flex text-primary">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 104 18"><path d="M10.1.7L11.8 5c.2.4.5.6.9.7l4.5.3c.9.1 1.3 1.3.6 1.9L14.4 11c-.3.3-.4.7-.3 1.1l1 4.5c.2 1-.8 1.7-1.6 1.2l-3.9-2.4c-.3-.2-.8-.2-1.1 0l-3.9 2.4c-.8.5-1.8-.2-1.6-1.2l1-4.5c.1-.4 0-.8-.3-1.1L.4 8c-.7-.7-.4-1.9.6-2l4.5-.4c.4 0 .7-.3.9-.7L8.2.6c.3-.8 1.5-.8 1.9.1"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 104 18"><path d="M31.5.7L33.3 5c.2.4.5.6.9.7l4.4.3c1 .1 1.4 1.3.6 2l-3.3 3c-.3.3-.4.7-.3 1.1l1 4.5c.2 1-.8 1.7-1.6 1.2l-3.9-2.4c-.3-.2-.8-.2-1.1 0l-3.9 2.4c-.8.5-1.8-.2-1.6-1.2l1-4.5c.1-.4 0-.8-.3-1.1l-3.4-3c-.7-.6-.3-1.9.6-1.9l4.5-.4c.4 0 .7-.3.9-.7L29.6.7c.3-.9 1.6-.9 1.9 0"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 104 18"><path d="M53 .7L54.7 5c.2.4.5.6.9.7l4.5.3c.9.1 1.3 1.3.6 2l-3.4 3c-.3.3-.4.7-.3 1.1l1 4.5c.2 1-.8 1.7-1.6 1.2l-3.9-2.4c-.3-.2-.8-.2-1.1 0l-3.9 2.4c-.8.5-1.8-.2-1.6-1.2l1-4.5c.1-.4 0-.8-.3-1.1l-3.3-3c-.7-.7-.3-1.9.6-2l4.5-.4c.4 0 .7-.3.9-.7L51 .7c.4-.9 1.6-.9 2 0"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 104 18"><path d="M74.4.7L76.2 5c.2.4.5.6.9.7l4.5.3c.9.1 1.3 1.3.6 1.9L78.8 11c-.3.3-.4.7-.3 1.1l1 4.5c.2 1-.8 1.7-1.6 1.2L74 15.4c-.3-.2-.8-.2-1.1 0L69 17.8c-.8.5-1.8-.2-1.6-1.2l1-4.5c.1-.4 0-.8-.3-1.1l-3.3-3c-.8-.7-.4-1.9.6-2l4.5-.4c.4 0 .7-.3.9-.7L72.6.6c.2-.8 1.5-.8 1.8.1"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 104 18"><path d="M95.9.7L97.7 5c.2.4.5.6.9.7l4.4.3c.9.1 1.3 1.3.6 1.9l-3.4 3.1c-.3.3-.4.7-.3 1.1l1 4.5c.2 1-.8 1.7-1.6 1.2l-3.9-2.4c-.3-.2-.8-.2-1.1 0l-3.9 2.4c-.8.5-1.8-.2-1.6-1.2l1-4.5c.1-.4 0-.8-.3-1.1l-3.3-3c-.7-.6-.3-1.9.6-1.9l4.5-.4c.4 0 .7-.3.9-.7L94 .7c.3-.9 1.5-.9 1.9 0"/></svg>
+          </span>
+          <span class="font-bold text-[15px]">4.8</span> <span class="font-normal text-sm">stars out of</span> <span class="font-bold text-[15px]">7,436 reviews</span>
+        </a>
+      </span>
+    </div>
+
+    <!-- Hero Video Embed Placeholder -->
+    <div class="w-full max-w-[900px] mx-auto mt-16 relative rounded-xl overflow-hidden shadow-2xl border-4 border-zinc-800/40 group cursor-pointer aspect-video bg-black/50">
+      <video muted autoplay loop playsinline class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+        <source src="https://kingkong.co/wp-content/themes/kingkong/assets/hero-video-v2.mp4" type="video/mp4">
+      </video>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="w-24 h-24 bg-primary/90 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110 shadow-lg">
+          <svg class="w-10 h-10 text-zinc-950 ml-2" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4l16 8-16 8V4z"/></svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('hero-form');
+    if (!form) return;
+    
+    const emailInput = document.getElementById('hero-email') as HTMLInputElement;
+    const nameInput = document.getElementById('hero-name') as HTMLInputElement;
+    const redirectUrl = form.getAttribute('data-redirect-url');
+    
+    let step = 1;
+    
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      if (step === 1) {
+        if (emailInput.validity.valid) {
+          // Transition to step 2
+          step = 2;
+          
+          emailInput.style.opacity = '0';
+          emailInput.style.pointerEvents = 'none';
+          emailInput.disabled = true;
+          
+          nameInput.disabled = false;
+          nameInput.style.opacity = '1';
+          nameInput.style.pointerEvents = 'auto';
+          nameInput.focus();
+        } else {
+          emailInput.reportValidity();
+        }
+      } else if (step === 2) {
+        if (nameInput.validity.valid) {
+          // In a real app, send lead data here
+          // For now, fast transition/redirect
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+          }
+        } else {
+          nameInput.reportValidity();
+        }
+      }
+    });
+  });
+</script>

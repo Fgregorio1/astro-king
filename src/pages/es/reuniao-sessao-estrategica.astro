@@ -1,0 +1,67 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Sesión Estratégica - King Kong" lang="es">
+  <div class="min-h-screen bg-[#F9F9F9] flex flex-col items-center pt-8 pb-20 font-sans">
+    
+    <!-- Logo Header -->
+    <header class="w-full flex justify-center mb-16">
+      <a href="/es" class="w-48 text-[#FF5E00]">
+        <svg class="w-full h-auto" viewBox="50 1170 1200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <path d="M84.232 1349.7H188.632V1377H51.832V1179H84.232V1349.7ZM385.463 1377H351.262L333.263 1324.8H253.763L235.463 1377H202.163L274.463 1179H313.463L385.463 1377ZM262.163 1299H324.863L293.663 1206.3L262.163 1299ZM535.669 1179V1206.3H469.969V1377H437.269V1206.3H371.869V1179H535.669ZM604.838 1179V1377H572.438V1179H604.838ZM820.193 1179V1377H782.393L707.693 1250.1L690.593 1217.4H690.293L691.193 1248.9V1377H661.793V1179H699.293L773.993 1305.9L791.393 1338.6H791.693L790.493 1307.1V1179H820.193Z" fill="#CFF127"></path>
+            <path d="M1031.03 1179V1300.8C1031.03 1327.2 1024.23 1347 1010.63 1360.2C997.225 1373.4 977.725 1380 952.125 1380C926.725 1380 907.225 1373.4 893.625 1360.2C880.025 1347 873.225 1327.2 873.225 1300.8V1179H905.925V1298.1C905.925 1315.1 909.425 1328.4 916.425 1338C923.425 1347.6 935.325 1352.4 952.125 1352.4C968.725 1352.4 980.625 1347.6 987.825 1338C995.025 1328.4 998.625 1315.1 998.625 1298.1V1179H1031.03ZM1149.95 1176C1167.35 1176 1182.35 1179.3 1194.95 1185.9C1207.75 1192.3 1218.55 1202.1 1227.35 1215.3L1206.95 1236.3C1199.75 1224.7 1191.35 1216.3 1181.75 1211.1C1172.35 1205.9 1161.25 1203.3 1148.45 1203.3C1139.25 1203.3 1131.65 1204.6 1125.65 1207.2C1119.85 1209.8 1115.45 1213.3 1112.45 1217.7C1109.65 1222.1 1108.25 1227 1108.25 1232.4C1108.25 1239 1110.45 1244.6 1114.85 1249.2C1119.45 1253.6 1127.35 1257.1 1138.55 1259.7L1175.75 1268.4C1194.35 1272.6 1207.65 1279 1215.65 1287.6C1223.65 1296 1227.65 1306.9 1227.65 1320.3C1227.65 1332.5 1224.45 1343.1 1218.05 1352.1C1211.65 1361.1 1202.65 1368 1191.05 1372.8C1179.65 1377.6 1166.45 1380 1151.45 1380C1138.05 1380 1125.75 1378.3 1114.55 1374.9C1103.55 1371.3 1093.95 1366.4 1085.75 1360.2C1077.75 1353.8 1071.05 1346.6 1065.65 1338.6L1086.35 1316.1C1090.35 1323.3 1095.55 1329.7 1101.95 1335.3C1108.35 1340.7 1115.75 1345 1124.15 1348.2C1132.75 1351.2 1141.95 1352.7 1151.75 1352.7C1160.55 1352.7 1168.05 1351.6 1174.25 1349.4C1180.65 1347.2 1185.55 1343.9 1188.95 1339.5C1192.35 1335.1 1194.05 1329.9 1194.05 1323.9C1194.05 1317.9 1192.05 1312.7 1188.05 1308.3C1184.25 1303.9 1177.15 1300.5 1166.75 1298.1L1126.25 1288.8C1115.25 1286.2 1105.85 1282.6 1098.05 1278C1090.25 1273.4 1084.35 1267.7 1080.35 1260.9C1076.35 1253.9 1074.35 1245.8 1074.35 1236.6C1074.35 1225.2 1077.35 1215 1083.35 1206C1089.55 1196.8 1098.25 1189.5 1109.45 1184.1C1120.85 1178.7 1134.35 1176 1149.95 1176Z" fill="#CFF127"></path>
+          </g>
+        </svg>
+      </a>
+    </header>
+
+    <div class="w-full max-w-[800px] mx-auto px-4 flex flex-col items-center text-center">
+      
+      <!-- Stepper -->
+      <div class="flex items-center gap-2 mb-12">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <div class="w-3 h-3 rounded-full bg-zinc-300 relative">
+            {i < 9 && <div class="absolute left-3 top-1/2 -translate-y-1/2 w-2 h-[2px] bg-zinc-300"></div>}
+          </div>
+        ))}
+      </div>
+
+      <!-- Emoji & Location -->
+      <div class="mb-4">
+        <span class="text-3xl block mb-2">👋</span>
+        <p class="text-zinc-500 font-medium tracking-wide text-sm">SIRVIENDO A CLIENTES EN: 🇪🇸</p>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-black text-black leading-[0.95] tracking-tight uppercase mb-8 font-heading">
+        SESIÓN DE MAPA DE CRECIMIENTO DE 30 MINUTOS GRATIS
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-lg md:text-xl text-zinc-600 max-w-[700px] leading-relaxed mb-10">
+        Reclama tu llamada gratuita de 30 minutos sin compromiso (valor de $1,000). Esto es estrictamente para personas que tienen hambre de crecimiento. Si ese eres tú, ¡entonces escalemos tu negocio a la luna! 🚀🌕
+      </p>
+
+      <!-- CTA Button -->
+      <button class="bg-[#CFF127] text-black font-black text-xl md:text-2xl px-12 py-5 rounded-md uppercase tracking-widest hover:-translate-y-1 transition-transform shadow-xl mb-12 flex items-center gap-3">
+        Comenzar
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+      </button>
+
+      <!-- Reviews -->
+      <div class="flex flex-col items-center gap-2">
+        <div class="flex text-[#FFD700]">
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="text-sm text-zinc-500"><span class="font-bold text-black">4.8</span> estrellas de <span class="font-bold text-black">7,434 reseñas</span></p>
+      </div>
+
+    </div>
+  </div>
+</Layout>

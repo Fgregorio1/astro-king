@@ -1,0 +1,36 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Hero from '../../components/Hero.astro';
+import MarqueeAwards from '../../components/MarqueeAwards.astro';
+import Features from '../../components/Features.astro';
+import OurOffering from '../../components/OurOffering.astro';
+import GlobeStats from '../../components/GlobeStats.astro';
+import MarqueeFeatured from '../../components/MarqueeFeatured.astro';
+import CaseStudies from '../../components/CaseStudies.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<Layout lang="es">
+	<Header />
+	<main>
+		<Hero 
+			titleLine1="ADQUISICIÓN DE"
+			titleHighlight="USA"
+			titleLine2="CLIENTES"
+			titleLine3="PARA LATINOS"
+			subtitle="Te vendieron la idea de que construir un negocio de prestación de servicios en USA es difícil. ¡Nosotros te demostramos lo contrario!"
+			inputPlaceholder="👋 Comienza ingresando tu email"
+			inputPlaceholder2="Por favor, ingrese su nombre"
+			buttonText="Avanzar"
+			redirectUrl="/es/reuniao-sessao-estrategica"
+		/>
+		<MarqueeAwards />
+		<Features />
+		<OurOffering />
+		<GlobeStats />
+		<MarqueeFeatured />
+		<CaseStudies />
+	</main>
+	<Footer />
+</Layout>

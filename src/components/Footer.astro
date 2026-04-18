@@ -1,0 +1,84 @@
+---
+const services = [
+  "SEO",
+  "Conversion Rate Optimization",
+  "Google Ads",
+  "Facebook Ads",
+  "Landing Pages",
+  "Web Design"
+];
+
+const company = [
+  "About Us",
+  "Contact Us",
+  "Blog",
+  "Reviews",
+  "Careers",
+  "Case Studies"
+];
+---
+
+<footer class="bg-zinc-950 text-zinc-400 py-20 border-t-8 border-primary">
+  <div class="container mx-auto px-4 max-w-7xl">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-12">
+      <!-- Brand & Contact -->
+      <div>
+        <div class="mb-8 flex items-start">
+          <a href="/" class="text-white text-4xl font-heading uppercase tracking-tighter flex items-start">
+            KING KONG<span class="text-primary text-xl ml-1 leading-none">&reg;</span>
+          </a>
+        </div>
+        <p class="mb-8 font-medium text-lg leading-relaxed">The most ruthlessly effective platform for rapidly scaling businesses on planet earth.</p>
+        <div class="flex flex-col gap-2">
+          <a href="tel:+18883038580" class="text-2xl font-black text-white hover:text-primary transition-colors flex items-center gap-3 tracking-wide">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+            </svg>
+            1-888-303-8580
+          </a>
+        </div>
+      </div>
+
+      <!-- Company Links -->
+      <div>
+        <h4 class="text-white font-black mb-8 uppercase tracking-widest text-sm border-l-4 border-primary pl-3">Company</h4>
+        <ul class="space-y-4">
+          {company.map(item => (
+            <li><a href="#" class="hover:text-primary transition-colors font-medium text-lg">{item}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Service Links -->
+      <div>
+        <h4 class="text-white font-black mb-8 uppercase tracking-widest text-sm border-l-4 border-primary pl-3">Services</h4>
+        <ul class="space-y-4">
+          {services.map(item => (
+            <li><a href="#" class="hover:text-primary transition-colors font-medium text-lg">{item}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Newsletter -->
+      <div>
+        <h4 class="text-white font-black mb-6 uppercase tracking-widest text-sm border-l-4 border-primary pl-3">Want some free money?</h4>
+        <p class="mb-6 font-medium leading-relaxed">Get million dollar marketing strategies sent straight to your inbox every week.</p>
+        <form class="flex flex-col gap-4">
+          <input type="email" placeholder="Enter your email address" class="bg-zinc-900 border-2 border-zinc-800 rounded-none px-5 py-4 text-white focus:outline-none focus:border-primary transition-colors font-medium" required />
+          <button type="submit" class="bg-primary hover:bg-[#bce01f] text-zinc-950 font-black uppercase tracking-wider rounded-none px-5 py-4 transition-colors flex justify-between items-center group">
+            <span>Subscribe</span>
+            <span class="text-2xl leading-none transform group-hover:translate-x-1 transition-transform">&rarr;</span>
+          </button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="mt-24 pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center text-sm font-medium text-zinc-500 gap-4">
+      <p>&copy; {new Date().getFullYear()} King Kong. All Rights Reserved.</p>
+      <div class="flex gap-6">
+        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
