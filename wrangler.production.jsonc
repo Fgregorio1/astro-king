@@ -12,7 +12,14 @@
 		"directory": "./dist/client"
 	},
 	"observability": {
-		"enabled": true
+		"enabled": true,
+		"logs": {
+			"enabled": true,
+			"invocation_logs": true
+		},
+		"traces": {
+			"enabled": false
+		}
 	},
 	"routes": [
 		{ "pattern": "latinuspro.com", "custom_domain": true },
