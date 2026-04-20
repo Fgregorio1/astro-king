@@ -9,6 +9,7 @@ interface Props {
   inputPlaceholder2?: string;
   buttonText?: string;
   redirectUrl?: string;
+  errorMessage?: string;
 }
 
 const {
@@ -20,7 +21,8 @@ const {
   inputPlaceholder = "👋 Comece inserindo seu email",
   inputPlaceholder2 = "Por favor, digite seu nome",
   buttonText = "Avançar",
-  redirectUrl = "/reuniao-sessao-estrategica"
+  redirectUrl = "/reuniao-sessao-estrategica",
+  errorMessage = "Por favor, insira um email válido."
 } = Astro.props;
 ---
 
@@ -49,7 +51,7 @@ const {
     <div class="w-full text-center mt-4">
       
       <!-- Exact Form Layout -->
-      <form id="hero-form" class="max-w-[700px] mx-auto relative group" data-redirect-url={redirectUrl} onsubmit="event.preventDefault();">
+      <form id="hero-form" class="max-w-[700px] mx-auto relative group flex flex-col gap-3" data-redirect-url={redirectUrl} data-error-message={errorMessage} novalidate>
         <div class="flex flex-row bg-[#EBEBEB] rounded-full shadow-2xl transition-transform hover:-translate-y-1 duration-300 overflow-hidden relative">
           <div class="flex-1 relative flex">
             <!-- Step 1: Email -->
@@ -58,7 +60,6 @@ const {
               id="hero-email"
               placeholder={inputPlaceholder}
               class="w-full bg-transparent text-[#222] text-base sm:text-lg md:text-xl font-medium font-sans placeholder:text-zinc-600 placeholder:font-normal focus:outline-none py-5 px-4 sm:pl-8 transition-opacity duration-300"
-              required
             />
             <!-- Step 2: Name -->
             <input 
@@ -66,11 +67,10 @@ const {
               id="hero-name"
               placeholder={inputPlaceholder2}
               class="absolute inset-0 w-full bg-[#EBEBEB] text-[#222] text-base sm:text-lg md:text-xl font-medium font-sans placeholder:text-zinc-600 placeholder:font-normal focus:outline-none py-5 px-4 sm:pl-8 opacity-0 pointer-events-none transition-opacity duration-300"
-              required
               disabled
             />
           </div>
-          <button type="submit" class="w-auto shrink-0 bg-[#CFF127] text-zinc-950 font-black text-base sm:text-lg md:text-xl uppercase tracking-widest px-5 sm:px-10 py-5 transition-all relative overflow-hidden group/btn flex items-center justify-center">
+          <button type="submit" formnovalidate class="w-auto shrink-0 bg-[#CFF127] text-zinc-950 font-black text-base sm:text-lg md:text-xl uppercase tracking-widest px-5 sm:px-10 py-5 transition-all relative overflow-hidden group/btn flex items-center justify-center">
             
             <!-- Flashy Diagonal Shine -->
             <div class="absolute inset-0 w-full h-full -translate-x-[150%] skew-x-[-25deg] bg-gradient-to-r from-transparent via-white/70 to-transparent group-hover/btn:animate-[shine_0.5s_ease-in-out]"></div>
@@ -85,6 +85,7 @@ const {
             </span>
           </button>
         </div>
+        <p id="hero-error" class="hidden text-red-500 font-medium text-left ml-6"></p>
       </form>
     </div>
 
@@ -122,13 +123,17 @@ const {
 </section>
 
 <script>
+  import { z } from "zod";
+
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('hero-form');
     if (!form) return;
     
     const emailInput = document.getElementById('hero-email') as HTMLInputElement;
     const nameInput = document.getElementById('hero-name') as HTMLInputElement;
+    const errorMsg = document.getElementById('hero-error') as HTMLParagraphElement;
     const redirectUrl = form.getAttribute('data-redirect-url');
+    const errorMessageText = form.getAttribute('data-error-message') || "Invalid email";
     
     let step = 1;
     
@@ -136,10 +141,20 @@ const {
       e.preventDefault();
       
       if (step === 1) {
-        if (emailInput.validity.valid) {
+        const emailSchema = z.string().email();
+        const emailValue = emailInput.value.trim();
+        const result = emailSchema.safeParse(emailValue);
+
+        if (result.success) {
+          try {
+            sessionStorage.setItem("quiz_email", emailValue);
+          } catch {
+            /* ignore */
+          }
           // Transition to step 2
           step = 2;
           
+          errorMsg.classList.add('hidden');
           emailInput.style.opacity = '0';
           emailInput.style.pointerEvents = 'none';
           emailInput.disabled = true;
@@ -149,18 +164,32 @@ const {
           nameInput.style.pointerEvents = 'auto';
           nameInput.focus();
         } else {
-          emailInput.reportValidity();
+          errorMsg.textContent = errorMessageText;
+          errorMsg.classList.remove('hidden');
+          emailInput.focus();
         }
       } else if (step === 2) {
-        if (nameInput.validity.valid) {
+        if (nameInput.value.trim().length > 0) {
+          try {
+            sessionStorage.setItem("quiz_firstName", nameInput.value.trim());
+          } catch {
+            /* ignore */
+          }
           // In a real app, send lead data here
           // For now, fast transition/redirect
           if (redirectUrl) {
             window.location.href = redirectUrl;
           }
         } else {
-          nameInput.reportValidity();
+          nameInput.focus();
         }
+      }
+    });
+
+    // Clear error on input
+    emailInput.addEventListener('input', () => {
+      if (!errorMsg.classList.contains('hidden')) {
+        errorMsg.classList.add('hidden');
       }
     });
   });
