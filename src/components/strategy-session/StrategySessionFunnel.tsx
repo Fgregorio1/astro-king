@@ -629,11 +629,11 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                     >
                       <div className={cn(
                         "relative flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-full bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] transition-all duration-200",
-                        isSelected ? "ring-2 ring-[#CFF127] ring-offset-2" : "group-hover:-translate-y-1 group-hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)]"
+                        isSelected ? "ring-2 ring-[#FF5E00] ring-offset-2" : "group-hover:-translate-y-1 group-hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)]"
                       )}>
                         {way.icon}
                         {isSelected && (
-                          <div className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#CFF127] text-black shadow-sm">
+                          <div className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#FF5E00] text-white shadow-sm">
                             <Check className="h-4 w-4" strokeWidth={3} />
                           </div>
                         )}
@@ -652,8 +652,8 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                   onClick={onWaysSubmit}
                   disabled={selectedWays.length === 0}
                   className={cn(
-                    "h-auto w-full max-w-[16rem] gap-2 rounded-lg border-0 bg-[#CFF127] py-4 text-lg font-bold text-black shadow-md transition-all",
-                    "hover:bg-[#b8d922] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
+                    "h-auto w-full max-w-[16rem] gap-2 rounded-lg border-0 bg-[#FF5E00] py-4 text-lg font-bold text-white shadow-md transition-all",
+                    "hover:bg-[#e55500] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
                   )}
                 >
                   {isEs ? "Continuar" : "Continuar"}
