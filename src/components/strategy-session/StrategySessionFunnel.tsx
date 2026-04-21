@@ -19,7 +19,7 @@ const STEP_MAIN_PY = "pt-8 pb-12 sm:pt-10 sm:pb-14";
 /** Consistent stack gap inside steps */
 const STEP_STACK_GAP = "gap-6 sm:gap-7";
 
-const DOT_COUNT = 9;
+const DOT_COUNT = 10;
 const DOT = "h-[14px] w-[14px] shrink-0 rounded-full sm:h-[16px] sm:w-[16px]";
 const LINE = "mx-[2px] h-[2px] min-w-[4px] flex-1 bg-[#D3D3D3] sm:mx-1";
 
@@ -96,6 +96,7 @@ const waysToGetClients = [
 export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "es" }) {
   const [step, setStep] = useState(0);
   const [selectedWays, setSelectedWays] = useState<string[]>([]);
+  const [selectedChallenges, setSelectedChallenges] = useState<string[]>([]);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const nameId = useId();
 
@@ -244,6 +245,22 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     setStep(9);
   }
 
+  function toggleChallenge(id: string) {
+    setSelectedChallenges(prev =>
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    );
+  }
+
+  function onChallengesSubmit() {
+    if (selectedChallenges.length === 0) return;
+    try {
+      sessionStorage.setItem("quiz_biggestChallenges", selectedChallenges.join(", "));
+    } catch {
+      /* ignore */
+    }
+    setStep(10);
+  }
+
   const businessTypes = [
     {
       icon: "🔧",
@@ -343,6 +360,34 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       icon: "🏦",
       pt: "Mais de $150.000",
       es: "Más de $150.000"
+    }
+  ];
+
+  const biggestChallenges = [
+    {
+      id: "clientes",
+      pt: "Não tenho clientes suficientes de forma consistente",
+      es: "No tengo suficientes clientes de forma consistente"
+    },
+    {
+      id: "lucro",
+      pt: "Trabalho muito mas não estou lucrando o suficiente",
+      es: "Trabajo mucho pero no estoy ganando lo suficiente"
+    },
+    {
+      id: "funcionarios",
+      pt: "Não consigo contratar ou manter bons funcionários",
+      es: "No puedo contratar o retener buenos empleados"
+    },
+    {
+      id: "marketing",
+      pt: "Não sei como me divulgar ou fazer marketing",
+      es: "No sé cómo promocionarme o hacer marketing"
+    },
+    {
+      id: "sozinho",
+      pt: "Estou fazendo tudo sozinho e me sinto travado",
+      es: "Estoy haciendo todo solo y me siento estancado"
     }
   ];
 
@@ -877,6 +922,74 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                     </span>
                   </button>
                 )})}
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {step === 9 ? (
+          <div
+            className={cn(
+              "flex w-full max-w-2xl flex-col self-center",
+              STEP_STACK_GAP,
+            )}
+          >
+            <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
+              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                {isEs 
+                  ? "Siendo sincero... ¿Cuáles son tus mayores dificultades?" 
+                  : "Sendo sincero... Quais são suas maiores dificuldades?"}
+              </h1>
+              
+              <p className="text-sm text-zinc-500 sm:text-base">
+                {isEs
+                  ? "(Marca más de una si corresponde)"
+                  : "(Marque mais de uma se for aplicável)"}
+              </p>
+
+              <div className="mt-4 flex flex-col gap-3 sm:gap-4 text-left">
+                {biggestChallenges.map((item) => {
+                  const label = isEs ? item.es : item.pt;
+                  const isSelected = selectedChallenges.includes(item.id);
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => toggleChallenge(item.id)}
+                      className={cn(
+                        "group flex w-full items-center gap-3 sm:gap-4 rounded-xl border border-[#E5E7EB] bg-white px-4 py-4 sm:px-5 sm:py-5 text-left shadow-sm transition-all",
+                        isSelected ? "border-[#FF5E00] ring-1 ring-[#FF5E00]" : "hover:border-[#FF5E00] hover:shadow-md"
+                      )}
+                    >
+                      <div className={cn(
+                        "flex h-6 w-6 shrink-0 items-center justify-center rounded border-2 transition-colors",
+                        isSelected ? "border-[#FF5E00] bg-[#FF5E00]" : "border-zinc-300 bg-zinc-50 group-hover:border-[#FF5E00]"
+                      )}>
+                        {isSelected && <Check className="h-4 w-4 text-white" strokeWidth={3} />}
+                      </div>
+                      <span className="text-[15px] font-medium text-zinc-700 sm:text-base">
+                        {label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-8 flex justify-center">
+                <Button
+                  type="button"
+                  onClick={onChallengesSubmit}
+                  disabled={selectedChallenges.length === 0}
+                  className={cn(
+                    "h-auto w-full max-w-[16rem] gap-2 rounded-lg border-0 bg-[#CFF127] py-4 text-lg font-bold text-black shadow-md transition-all",
+                    "hover:bg-[#b8d922] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
+                  )}
+                >
+                  {isEs ? "Continuar" : "Continuar"}
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 12h16m-7-7 7 7-7 7" />
+                  </svg>
+                </Button>
               </div>
             </div>
           </div>
