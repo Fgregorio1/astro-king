@@ -70,14 +70,28 @@ const GoogleIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const GoogleAdsIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2.87 18.99L10.36 6.01c.77-1.33 2.45-1.79 3.78-1.02 1.33.77 1.79 2.45 1.02 3.78L7.67 21.75c-.77 1.33-2.45 1.79-3.78 1.02-1.33-.77-1.79-2.45-1.02-3.78z" fill="#FABB05"/>
+    <path d="M21.13 18.99L13.64 6.01c-.77-1.33-2.45-1.79-3.78-1.02-1.33.77-1.79 2.45-1.02 3.78l7.49 12.98c.77 1.33 2.45 1.79 3.78 1.02 1.33-.77 1.79-2.45 1.02-3.78z" fill="#4285F4"/>
+    <path d="M6.5 22.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" fill="#34A853"/>
+  </svg>
+);
+
+const NextdoorIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="#00B246" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.176 15.698h-2.588v-4.048c0-1.118-.894-2.024-2.001-2.024-1.106 0-2.001.906-2.001 2.024v4.048H7.998V8.302h2.588v1.312c.53-.882 1.518-1.453 2.589-1.453 1.647 0 2.988 1.335 2.988 2.982v4.555h.013z"/>
+  </svg>
+);
+
 const waysToGetClients = [
   { id: "contratista", pt: "Contratista", es: "Contratista", icon: <HardHat className="h-9 w-9 text-amber-500" strokeWidth={1.5} /> },
   { id: "indicacao", pt: "Indicação", es: "Recomendación", icon: <Users className="h-9 w-9 text-indigo-500" strokeWidth={1.5} /> },
   { id: "facebook", pt: "Facebook ads", es: "Facebook ads", icon: <FacebookIcon className="h-9 w-9" /> },
-  { id: "google", pt: "Google Ads", es: "Google Ads", icon: <GoogleIcon className="h-9 w-9" /> },
-  { id: "nextdoor", pt: "Nextdoor Ads", es: "Nextdoor Ads", icon: <Home className="h-9 w-9 text-emerald-500" strokeWidth={1.5} /> },
+  { id: "google", pt: "Google Ads", es: "Google Ads", icon: <GoogleAdsIcon className="h-9 w-9" /> },
+  { id: "nextdoor", pt: "Nextdoor Ads", es: "Nextdoor Ads", icon: <NextdoorIcon className="h-9 w-9" /> },
   { id: "door_hangers", pt: "Door Hangers", es: "Door Hangers", icon: <FileText className="h-9 w-9 text-orange-400" strokeWidth={1.5} /> },
-  { id: "seo", pt: "SEO", es: "SEO", icon: <Search className="h-9 w-9 text-purple-500" strokeWidth={1.5} /> },
+  { id: "seo", pt: "SEO", es: "SEO", icon: <GoogleIcon className="h-9 w-9" /> },
   { id: "nenhum", pt: "Nenhum", es: "Ninguno", icon: <Ban className="h-9 w-9 text-red-500" strokeWidth={1.5} /> },
 ];
 
