@@ -1082,10 +1082,11 @@ export default function StrategySessionFunnel({
                   ref={websiteInputRef}
                   id={websiteId}
                   name="website"
-                  type="url"
+                  type="text"
                   autoComplete="url"
+                  inputMode="url"
                   maxLength={200}
-                  placeholder={isEs ? "https://ejemplo.com" : "https://exemplo.com.br"}
+                  placeholder={isEs ? "ejemplo.com" : "exemplo.com.br"}
                   className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
                 />
                 <Button
@@ -1366,9 +1367,10 @@ export default function StrategySessionFunnel({
                 />
 
                 <input
-                  type="url"
-                  required
-                  placeholder={isEs ? "Sitio Web *" : "Site *"}
+                  type="text"
+                  inputMode="url"
+                  autoComplete="url"
+                  placeholder={isEs ? "Sitio Web" : "Site"}
                   value={finalForm.website}
                   onChange={(e) => setFinalForm(prev => ({ ...prev, website: e.target.value }))}
                   className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-500 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
