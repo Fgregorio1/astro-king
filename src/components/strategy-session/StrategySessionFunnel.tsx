@@ -19,7 +19,7 @@ const STEP_MAIN_PY = "pt-8 pb-12 sm:pt-10 sm:pb-14";
 /** Consistent stack gap inside steps */
 const STEP_STACK_GAP = "gap-6 sm:gap-7";
 
-const DOT_COUNT = 10;
+const DOT_COUNT = 11;
 const DOT = "h-[14px] w-[14px] shrink-0 rounded-full sm:h-[16px] sm:w-[16px]";
 const LINE = "mx-[2px] h-[2px] min-w-[4px] flex-1 bg-[#D3D3D3] sm:mx-1";
 
@@ -261,6 +261,15 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     setStep(10);
   }
 
+  function handleInvestmentReadinessSelect(readiness: string) {
+    try {
+      sessionStorage.setItem("quiz_investmentReadiness", readiness);
+    } catch {
+      /* ignore */
+    }
+    setStep(11);
+  }
+
   const businessTypes = [
     {
       icon: "🔧",
@@ -388,6 +397,24 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       id: "sozinho",
       pt: "Estou fazendo tudo sozinho e me sinto travado",
       es: "Estoy haciendo todo solo y me siento estancado"
+    }
+  ];
+
+  const investmentReadinessOptions = [
+    {
+      icon: "✅",
+      pt: "Sim — estou pronto para investir se o plano fizer sentido",
+      es: "Sí — estoy listo para invertir si el plan tiene sentido"
+    },
+    {
+      icon: "🤔",
+      pt: "Precisaria entender o retorno primeiro, mas estou aberto",
+      es: "Necesitaría entender el retorno primero, pero estoy abierto"
+    },
+    {
+      icon: "❌",
+      pt: "Agora não, não tenho orçamento para isso",
+      es: "Ahora no, no tengo presupuesto para eso"
     }
   ];
 
@@ -990,6 +1017,46 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 12h16m-7-7 7 7-7 7" />
                   </svg>
                 </Button>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {step === 10 ? (
+          <div
+            className={cn(
+              "flex w-full max-w-2xl flex-col self-center",
+              STEP_STACK_GAP,
+            )}
+          >
+            <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
+              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                {isEs 
+                  ? "¿Cómo te sientes acerca de INVERTIR en un plan de marketing y proceso comercial ahora?" 
+                  : "Como você se sente sobre INVESTIR em um plano de marketing e processo comercial agora?"}
+              </h1>
+              
+              <div className="mt-4 flex flex-col gap-3 sm:gap-4 text-left">
+                {investmentReadinessOptions.map((item) => {
+                  const label = isEs ? item.es : item.pt;
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => handleInvestmentReadinessSelect(label)}
+                      className={cn(
+                        "group flex w-full items-center gap-3 sm:gap-4 rounded-full border border-[#E5E7EB] bg-white px-4 py-3.5 sm:px-5 sm:py-4 text-left shadow-sm transition-all",
+                        "hover:border-[#FF5E00] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FF5E00]/60"
+                      )}
+                    >
+                      <div className="flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full border-2 border-zinc-200 bg-zinc-100 transition-colors group-hover:border-[#FF5E00] group-hover:bg-white" />
+                      <span className="text-[15px] font-medium text-zinc-700 sm:text-base truncate">
+                        <span className="mr-2 text-lg">{item.icon}</span>
+                        {label}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
