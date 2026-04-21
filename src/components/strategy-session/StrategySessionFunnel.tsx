@@ -131,23 +131,33 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     setStep(4);
   }
 
-  const businessTypesPt = [
-    "HVAC / Encanamento / Elétrica",
-    "Jardinagem / Manutenção de Jardins",
-    "Limpeza / Higienização",
-    "Construção / Reforma / Telhados",
-    "Outro Serviço Residencial"
+  const businessTypes = [
+    {
+      icon: "🔧",
+      pt: "HVAC / Hidráulica / Elétrica",
+      es: "HVAC / Plomería / Electricidad"
+    },
+    {
+      icon: "🌿",
+      pt: "Jardinagem / Paisagismo",
+      es: "Jardinería / Paisajismo"
+    },
+    {
+      icon: "✨",
+      pt: "Limpeza / Higienização",
+      es: "Limpieza / Higienización"
+    },
+    {
+      icon: "🏗️",
+      pt: "Construção / Reformas",
+      es: "Construcción / Remodelación"
+    },
+    {
+      icon: "🏡",
+      pt: "Outro Serviço Residencial",
+      es: "Otro Servicio Residencial"
+    }
   ];
-
-  const businessTypesEs = [
-    "HVAC / Plomería / Electricidad",
-    "Jardinería / Mantenimiento de Jardines",
-    "Limpieza / Higienización",
-    "Construcción / Remodelación / Techos",
-    "Otro Servicio Residencial"
-  ];
-
-  const businessTypes = isEs ? businessTypesEs : businessTypesPt;
 
   return (
     <div className="relative flex min-h-screen flex-col bg-white font-sans text-black">
@@ -422,22 +432,25 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
               </p>
 
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
-                {businessTypes.map((type) => (
+                {businessTypes.map((item) => {
+                  const label = isEs ? item.es : item.pt;
+                  return (
                   <button
-                    key={type}
+                    key={label}
                     type="button"
-                    onClick={() => handleBusinessTypeSelect(type)}
+                    onClick={() => handleBusinessTypeSelect(label)}
                     className={cn(
-                      "group flex w-full items-center gap-4 rounded-full border border-[#E5E7EB] bg-white px-5 py-4 text-left shadow-sm transition-all",
-                      "hover:border-[#CFF127] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CFF127]/60"
+                      "group flex w-full items-center gap-3 sm:gap-4 rounded-full border border-[#E5E7EB] bg-white px-4 py-3.5 sm:px-5 sm:py-4 text-left shadow-sm transition-all",
+                      "hover:border-[#FF5E00] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FF5E00]/60"
                     )}
                   >
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-zinc-200 bg-zinc-100 transition-colors group-hover:border-[#CFF127] group-hover:bg-white" />
-                    <span className="text-base font-medium text-zinc-700 sm:text-lg">
-                      {type}
+                    <div className="flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full border-2 border-zinc-200 bg-zinc-100 transition-colors group-hover:border-[#FF5E00] group-hover:bg-white" />
+                    <span className="text-[15px] font-medium text-zinc-700 sm:text-base truncate">
+                      <span className="mr-2 text-lg">{item.icon}</span>
+                      {label}
                     </span>
                   </button>
-                ))}
+                )})}
               </div>
             </div>
           </div>
