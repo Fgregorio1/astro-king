@@ -19,7 +19,7 @@ const STEP_MAIN_PY = "pt-8 pb-12 sm:pt-10 sm:pb-14";
 /** Consistent stack gap inside steps */
 const STEP_STACK_GAP = "gap-6 sm:gap-7";
 
-const DOT_COUNT = 10;
+const DOT_COUNT = 9;
 const DOT = "h-[14px] w-[14px] shrink-0 rounded-full sm:h-[16px] sm:w-[16px]";
 const LINE = "mx-[2px] h-[2px] min-w-[4px] flex-1 bg-[#D3D3D3] sm:mx-1";
 
@@ -79,61 +79,23 @@ const GoogleAdsIcon = ({ className }: { className?: string }) => (
 );
 
 const NextdoorIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="512" cy="512" r="512" fill="#82D200"/>
-    <path d="M435.2 411.3c-11.7-11.7-28.5-18.9-47.1-18.9h-28.8c-18.6 0-35.4 7.2-47.1 18.9-11.7 11.7-18.9 28.5-18.9 47.1v25.6c0 18.6 7.2 35.4 18.9 47.1 11.7 11.7 28.5 18.9 47.1 18.9h2.1c11.1 23.5 24.5 44.8 40.5 64 16 19.2 34.1 36.3 54.4 51.2 20.3 14.9 42.7 26.7 67.2 35.2 24.5 8.5 51.2 12.8 80 12.8s55.5-4.3 80-12.8c24.5-8.5 46.9-20.3 67.2-35.2 20.3-14.9 38.4-32 54.4-51.2 16-19.2 29.3-40.5 40.5-64h2.1c18.6 0 35.4-7.2 47.1-18.9 11.7-11.7 18.9-28.5 18.9-47.1v-25.6c0-18.6-7.2-35.4-18.9-47.1-11.7-11.7-28.5-18.9-47.1-18.9h-28.8c-18.6 0-35.4 7.2-47.1 18.9-11.7 11.7-18.9 28.5-18.9 47.1v153.6c0 23.5-4.3 44.8-12.8 64-8.5 19.2-20.3 36.3-35.2 51.2-14.9 14.9-32 26.7-51.2 35.2-19.2 8.5-40.5 12.8-64 12.8s-44.8-4.3-64-12.8c-19.2-8.5-36.3-20.3-51.2-35.2-14.9-14.9-26.7-32-35.2-51.2-8.5-19.2-12.8-40.5-12.8-64V458.4c0-18.6-7.2-35.4-18.9-47.1z" fill="#FFFFFF"/>
-  </svg>
+  <img src="/assets/images/nextdoor.png" alt="Nextdoor" className={cn("object-cover rounded-full", className)} />
 );
 
-  const waysToGetClients = [
-    { id: "contratista", pt: "Contratista", es: "Contratista", icon: <HardHat className="h-9 w-9 text-amber-500" strokeWidth={1.5} /> },
-    { id: "indicacao", pt: "Indicação", es: "Recomendación", icon: <Users className="h-9 w-9 text-indigo-500" strokeWidth={1.5} /> },
-    { id: "facebook", pt: "Facebook ads", es: "Facebook ads", icon: <FacebookIcon className="h-9 w-9" /> },
-    { id: "google", pt: "Google Ads", es: "Google Ads", icon: <GoogleAdsIcon className="h-9 w-9" /> },
-    { id: "nextdoor", pt: "Nextdoor Ads", es: "Nextdoor Ads", icon: <NextdoorIcon className="h-9 w-9" /> },
-    { id: "door_hangers", pt: "Door Hangers", es: "Door Hangers", icon: <FileText className="h-9 w-9 text-orange-400" strokeWidth={1.5} /> },
-    { id: "seo", pt: "SEO", es: "SEO", icon: <GoogleIcon className="h-9 w-9" /> },
-    { id: "nenhum", pt: "Nenhum", es: "Ninguno", icon: <Ban className="h-9 w-9 text-red-500" strokeWidth={1.5} /> },
-  ];
-
-  const teamSizes = [
-    { pt: "Só eu", es: "Solo yo" },
-    { pt: "2 - 4 pessoas", es: "2 - 4 personas" },
-    { pt: "5 - 10 pessoas", es: "5 - 10 personas" },
-    { pt: "10+ pessoas", es: "10+ personas" }
-  ];
-
-  const revenueRanges = [
-    { pt: "Menos de $50.000", es: "Menos de $50.000" },
-    { pt: "$50.000 - $120.000", es: "$50.000 - $120.000" },
-    { pt: "$120.000 - $300.000", es: "$120.000 - $300.000" },
-    { pt: "$300.000 - $500.000", es: "$300.000 - $500.000" },
-    { pt: "Mais de $500.000", es: "Más de $500.000" }
-  ];
-
-  const biggestChallenges = [
-    { id: "clientes", pt: "Não tenho clientes suficientes de forma consistente", es: "No tengo suficientes clientes de forma consistente" },
-    { id: "lucro", pt: "Trabalho muito mas não estou lucrando o suficiente", es: "Trabajo mucho pero no estoy ganando lo suficiente" },
-    { id: "funcionarios", pt: "Não consigo contratar ou manter bons funcionários", es: "No puedo contratar o retener buenos empleados" },
-    { id: "marketing", pt: "Não sei como me divulgar ou fazer marketing", es: "No sé cómo promocionarme o hacer marketing" },
-    { id: "sozinho", pt: "Estou fazendo tudo sozinho e me sinto travado", es: "Estoy haciendo todo solo y me siento estancado" }
-  ];
-
-  const investmentReadiness = [
-    { pt: "Sim — estou pronto para investir se o plano fizer sentido", es: "Sí — estoy listo para invertir si el plan tiene sentido" },
-    { pt: "Precisaria entender o retorno primeiro, mas estou aberto", es: "Necesitaría entender el retorno primero, pero estoy abierto" },
-    { pt: "Agora não, não tenho orçamento para isso", es: "Ahora no, no tengo presupuesto para esto" }
-  ];
-
-  const commitmentConfirmed = [
-    { pt: "100% — eu apareço e estou pronto para crescer", es: "100% — me presento y estoy listo para crecer" },
-    { pt: "Ainda não tenho certeza", es: "Aún no estoy seguro" }
-  ];
+const waysToGetClients = [
+  { id: "contratista", pt: "Contratista", es: "Contratista", icon: <HardHat className="h-9 w-9 text-amber-500" strokeWidth={1.5} /> },
+  { id: "indicacao", pt: "Indicação", es: "Recomendación", icon: <Users className="h-9 w-9 text-indigo-500" strokeWidth={1.5} /> },
+  { id: "facebook", pt: "Facebook ads", es: "Facebook ads", icon: <FacebookIcon className="h-9 w-9" /> },
+  { id: "google", pt: "Google Ads", es: "Google Ads", icon: <GoogleAdsIcon className="h-9 w-9" /> },
+  { id: "nextdoor", pt: "Nextdoor Ads", es: "Nextdoor Ads", icon: <NextdoorIcon className="h-9 w-9" /> },
+  { id: "door_hangers", pt: "Door Hangers", es: "Door Hangers", icon: <FileText className="h-9 w-9 text-orange-400" strokeWidth={1.5} /> },
+  { id: "seo", pt: "SEO", es: "SEO", icon: <GoogleIcon className="h-9 w-9" /> },
+  { id: "nenhum", pt: "Nenhum", es: "Ninguno", icon: <Ban className="h-9 w-9 text-red-500" strokeWidth={1.5} /> },
+];
 
 export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "es" }) {
   const [step, setStep] = useState(0);
   const [selectedWays, setSelectedWays] = useState<string[]>([]);
-  const [selectedChallenges, setSelectedChallenges] = useState<string[]>([]);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const nameId = useId();
 
@@ -245,38 +207,6 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       /* ignore */
     }
     setStep(6);
-  }
-
-  function handleTeamSizeSelect(size: string) {
-    try { sessionStorage.setItem("quiz_teamSize", size); } catch {}
-    setStep(7);
-  }
-
-  function handleRevenueSelect(revenue: string) {
-    try { sessionStorage.setItem("quiz_revenue", revenue); } catch {}
-    setStep(8);
-  }
-
-  function toggleChallenge(id: string) {
-    setSelectedChallenges(prev => 
-      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
-    );
-  }
-
-  function onChallengesSubmit() {
-    if (selectedChallenges.length === 0) return;
-    try { sessionStorage.setItem("quiz_challenges", selectedChallenges.join(", ")); } catch {}
-    setStep(9);
-  }
-
-  function handleInvestmentSelect(readiness: string) {
-    try { sessionStorage.setItem("quiz_investment", readiness); } catch {}
-    setStep(10);
-  }
-
-  function handleCommitmentSelect(commitment: string) {
-    try { sessionStorage.setItem("quiz_commitment", commitment); } catch {}
-    setStep(11);
   }
 
   const businessTypes = [
@@ -696,11 +626,11 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                     >
                       <div className={cn(
                         "relative flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-full bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] transition-all duration-200",
-                        isSelected ? "ring-2 ring-[#FF5E00] ring-offset-2" : "group-hover:-translate-y-1 group-hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)]"
+                        isSelected ? "ring-2 ring-[#CFF127] ring-offset-2" : "group-hover:-translate-y-1 group-hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)]"
                       )}>
                         {way.icon}
                         {isSelected && (
-                          <div className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#FF5E00] text-white shadow-sm">
+                          <div className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#CFF127] text-black shadow-sm">
                             <Check className="h-4 w-4" strokeWidth={3} />
                           </div>
                         )}
@@ -719,8 +649,8 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                   onClick={onWaysSubmit}
                   disabled={selectedWays.length === 0}
                   className={cn(
-                    "h-auto w-full max-w-[16rem] gap-2 rounded-lg border-0 bg-[#FF5E00] py-4 text-lg font-bold text-white shadow-md transition-all",
-                    "hover:bg-[#e55500] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
+                    "h-auto w-full max-w-[16rem] gap-2 rounded-lg border-0 bg-[#CFF127] py-4 text-lg font-bold text-black shadow-md transition-all",
+                    "hover:bg-[#b8d922] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
                   )}
                 >
                   {isEs ? "Continuar" : "Continuar"}
