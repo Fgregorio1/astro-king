@@ -235,6 +235,15 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     setStep(8);
   }
 
+  function handleRevenueSelect(revenue: string) {
+    try {
+      sessionStorage.setItem("quiz_revenue", revenue);
+    } catch {
+      /* ignore */
+    }
+    setStep(9);
+  }
+
   const businessTypes = [
     {
       icon: "🔧",
@@ -306,6 +315,34 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       icon: "🚀",
       pt: "10+ pessoas",
       es: "10+ personas"
+    }
+  ];
+
+  const revenueOptions = [
+    {
+      icon: "🪙",
+      pt: "Menos de $8.000",
+      es: "Menos de $8.000"
+    },
+    {
+      icon: "💵",
+      pt: "$8.000 – $15.000",
+      es: "$8.000 – $15.000"
+    },
+    {
+      icon: "💸",
+      pt: "$15.000 – $50.000",
+      es: "$15.000 – $50.000"
+    },
+    {
+      icon: "💰",
+      pt: "$50.000 – $150.000",
+      es: "$50.000 – $150.000"
+    },
+    {
+      icon: "🏦",
+      pt: "Mais de $150.000",
+      es: "Más de $150.000"
     }
   ];
 
@@ -805,6 +842,43 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                 </Button>
               </div>
             </form>
+          </div>
+        ) : null}
+
+        {step === 8 ? (
+          <div
+            className={cn(
+              "flex w-full max-w-2xl flex-col self-center",
+              STEP_STACK_GAP,
+            )}
+          >
+            <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
+              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                {isEs ? "¿Cuánto factura tu empresa MENSUALMENTE en la actualidad?" : "Quanto sua empresa fatura MENSALMENTE atualmente?"}
+              </h1>
+              
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+                {revenueOptions.map((item) => {
+                  const label = isEs ? item.es : item.pt;
+                  return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => handleRevenueSelect(label)}
+                    className={cn(
+                      "group flex w-full items-center gap-3 sm:gap-4 rounded-full border border-[#E5E7EB] bg-white px-4 py-3.5 sm:px-5 sm:py-4 text-left shadow-sm transition-all",
+                      "hover:border-[#FF5E00] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FF5E00]/60"
+                    )}
+                  >
+                    <div className="flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full border-2 border-zinc-200 bg-zinc-100 transition-colors group-hover:border-[#FF5E00] group-hover:bg-white" />
+                    <span className="text-[15px] font-medium text-zinc-700 sm:text-base truncate">
+                      <span className="mr-2 text-lg">{item.icon}</span>
+                      {label}
+                    </span>
+                  </button>
+                )})}
+              </div>
+            </div>
           </div>
         ) : null}
       </main>
