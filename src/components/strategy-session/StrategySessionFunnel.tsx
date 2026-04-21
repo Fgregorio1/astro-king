@@ -19,7 +19,7 @@ const STEP_MAIN_PY = "pt-8 pb-12 sm:pt-10 sm:pb-14";
 /** Consistent stack gap inside steps */
 const STEP_STACK_GAP = "gap-6 sm:gap-7";
 
-const DOT_COUNT = 9;
+const DOT_COUNT = 10;
 const DOT = "h-[14px] w-[14px] shrink-0 rounded-full sm:h-[16px] sm:w-[16px]";
 const LINE = "mx-[2px] h-[2px] min-w-[4px] flex-1 bg-[#D3D3D3] sm:mx-1";
 
@@ -85,20 +85,55 @@ const NextdoorIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const waysToGetClients = [
-  { id: "contratista", pt: "Contratista", es: "Contratista", icon: <HardHat className="h-9 w-9 text-amber-500" strokeWidth={1.5} /> },
-  { id: "indicacao", pt: "Indicação", es: "Recomendación", icon: <Users className="h-9 w-9 text-indigo-500" strokeWidth={1.5} /> },
-  { id: "facebook", pt: "Facebook ads", es: "Facebook ads", icon: <FacebookIcon className="h-9 w-9" /> },
-  { id: "google", pt: "Google Ads", es: "Google Ads", icon: <GoogleAdsIcon className="h-9 w-9" /> },
-  { id: "nextdoor", pt: "Nextdoor Ads", es: "Nextdoor Ads", icon: <NextdoorIcon className="h-9 w-9" /> },
-  { id: "door_hangers", pt: "Door Hangers", es: "Door Hangers", icon: <FileText className="h-9 w-9 text-orange-400" strokeWidth={1.5} /> },
-  { id: "seo", pt: "SEO", es: "SEO", icon: <GoogleIcon className="h-9 w-9" /> },
-  { id: "nenhum", pt: "Nenhum", es: "Ninguno", icon: <Ban className="h-9 w-9 text-red-500" strokeWidth={1.5} /> },
-];
+  const waysToGetClients = [
+    { id: "contratista", pt: "Contratista", es: "Contratista", icon: <HardHat className="h-9 w-9 text-amber-500" strokeWidth={1.5} /> },
+    { id: "indicacao", pt: "Indicação", es: "Recomendación", icon: <Users className="h-9 w-9 text-indigo-500" strokeWidth={1.5} /> },
+    { id: "facebook", pt: "Facebook ads", es: "Facebook ads", icon: <FacebookIcon className="h-9 w-9" /> },
+    { id: "google", pt: "Google Ads", es: "Google Ads", icon: <GoogleAdsIcon className="h-9 w-9" /> },
+    { id: "nextdoor", pt: "Nextdoor Ads", es: "Nextdoor Ads", icon: <NextdoorIcon className="h-9 w-9" /> },
+    { id: "door_hangers", pt: "Door Hangers", es: "Door Hangers", icon: <FileText className="h-9 w-9 text-orange-400" strokeWidth={1.5} /> },
+    { id: "seo", pt: "SEO", es: "SEO", icon: <GoogleIcon className="h-9 w-9" /> },
+    { id: "nenhum", pt: "Nenhum", es: "Ninguno", icon: <Ban className="h-9 w-9 text-red-500" strokeWidth={1.5} /> },
+  ];
+
+  const teamSizes = [
+    { pt: "Só eu", es: "Solo yo" },
+    { pt: "2 - 4 pessoas", es: "2 - 4 personas" },
+    { pt: "5 - 10 pessoas", es: "5 - 10 personas" },
+    { pt: "10+ pessoas", es: "10+ personas" }
+  ];
+
+  const revenueRanges = [
+    { pt: "Menos de $50.000", es: "Menos de $50.000" },
+    { pt: "$50.000 - $120.000", es: "$50.000 - $120.000" },
+    { pt: "$120.000 - $300.000", es: "$120.000 - $300.000" },
+    { pt: "$300.000 - $500.000", es: "$300.000 - $500.000" },
+    { pt: "Mais de $500.000", es: "Más de $500.000" }
+  ];
+
+  const biggestChallenges = [
+    { id: "clientes", pt: "Não tenho clientes suficientes de forma consistente", es: "No tengo suficientes clientes de forma consistente" },
+    { id: "lucro", pt: "Trabalho muito mas não estou lucrando o suficiente", es: "Trabajo mucho pero no estoy ganando lo suficiente" },
+    { id: "funcionarios", pt: "Não consigo contratar ou manter bons funcionários", es: "No puedo contratar o retener buenos empleados" },
+    { id: "marketing", pt: "Não sei como me divulgar ou fazer marketing", es: "No sé cómo promocionarme o hacer marketing" },
+    { id: "sozinho", pt: "Estou fazendo tudo sozinho e me sinto travado", es: "Estoy haciendo todo solo y me siento estancado" }
+  ];
+
+  const investmentReadiness = [
+    { pt: "Sim — estou pronto para investir se o plano fizer sentido", es: "Sí — estoy listo para invertir si el plan tiene sentido" },
+    { pt: "Precisaria entender o retorno primeiro, mas estou aberto", es: "Necesitaría entender el retorno primero, pero estoy abierto" },
+    { pt: "Agora não, não tenho orçamento para isso", es: "Ahora no, no tengo presupuesto para esto" }
+  ];
+
+  const commitmentConfirmed = [
+    { pt: "100% — eu apareço e estou pronto para crescer", es: "100% — me presento y estoy listo para crecer" },
+    { pt: "Ainda não tenho certeza", es: "Aún no estoy seguro" }
+  ];
 
 export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "es" }) {
   const [step, setStep] = useState(0);
   const [selectedWays, setSelectedWays] = useState<string[]>([]);
+  const [selectedChallenges, setSelectedChallenges] = useState<string[]>([]);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const nameId = useId();
 
@@ -210,6 +245,38 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       /* ignore */
     }
     setStep(6);
+  }
+
+  function handleTeamSizeSelect(size: string) {
+    try { sessionStorage.setItem("quiz_teamSize", size); } catch {}
+    setStep(7);
+  }
+
+  function handleRevenueSelect(revenue: string) {
+    try { sessionStorage.setItem("quiz_revenue", revenue); } catch {}
+    setStep(8);
+  }
+
+  function toggleChallenge(id: string) {
+    setSelectedChallenges(prev => 
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    );
+  }
+
+  function onChallengesSubmit() {
+    if (selectedChallenges.length === 0) return;
+    try { sessionStorage.setItem("quiz_challenges", selectedChallenges.join(", ")); } catch {}
+    setStep(9);
+  }
+
+  function handleInvestmentSelect(readiness: string) {
+    try { sessionStorage.setItem("quiz_investment", readiness); } catch {}
+    setStep(10);
+  }
+
+  function handleCommitmentSelect(commitment: string) {
+    try { sessionStorage.setItem("quiz_commitment", commitment); } catch {}
+    setStep(11);
   }
 
   const businessTypes = [
