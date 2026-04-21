@@ -79,8 +79,9 @@ const GoogleAdsIcon = ({ className }: { className?: string }) => (
 );
 
 const NextdoorIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="#00B246" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.176 15.698h-2.588v-4.048c0-1.118-.894-2.024-2.001-2.024-1.106 0-2.001.906-2.001 2.024v4.048H7.998V8.302h2.588v1.312c.53-.882 1.518-1.453 2.589-1.453 1.647 0 2.988 1.335 2.988 2.982v4.555h.013z"/>
+  <svg className={className} viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="512" cy="512" r="512" fill="#82D200"/>
+    <path d="M435.2 411.3c-11.7-11.7-28.5-18.9-47.1-18.9h-28.8c-18.6 0-35.4 7.2-47.1 18.9-11.7 11.7-18.9 28.5-18.9 47.1v25.6c0 18.6 7.2 35.4 18.9 47.1 11.7 11.7 28.5 18.9 47.1 18.9h2.1c11.1 23.5 24.5 44.8 40.5 64 16 19.2 34.1 36.3 54.4 51.2 20.3 14.9 42.7 26.7 67.2 35.2 24.5 8.5 51.2 12.8 80 12.8s55.5-4.3 80-12.8c24.5-8.5 46.9-20.3 67.2-35.2 20.3-14.9 38.4-32 54.4-51.2 16-19.2 29.3-40.5 40.5-64h2.1c18.6 0 35.4-7.2 47.1-18.9 11.7-11.7 18.9-28.5 18.9-47.1v-25.6c0-18.6-7.2-35.4-18.9-47.1-11.7-11.7-28.5-18.9-47.1-18.9h-28.8c-18.6 0-35.4 7.2-47.1 18.9-11.7 11.7-18.9 28.5-18.9 47.1v153.6c0 23.5-4.3 44.8-12.8 64-8.5 19.2-20.3 36.3-35.2 51.2-14.9 14.9-32 26.7-51.2 35.2-19.2 8.5-40.5 12.8-64 12.8s-44.8-4.3-64-12.8c-19.2-8.5-36.3-20.3-51.2-35.2-14.9-14.9-26.7-32-35.2-51.2-8.5-19.2-12.8-40.5-12.8-64V458.4c0-18.6-7.2-35.4-18.9-47.1z" fill="#FFFFFF"/>
   </svg>
 );
 
@@ -606,8 +607,8 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
             <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
               <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
                 {isEs 
-                  ? "¡Genial! ¿Qué tipos de marketing estás utilizando actualmente?" 
-                  : "Ok ótimo! Quais tipos de marketing você está usando atualmente?"}
+                  ? "¡Genial! ¿Cuáles son tus principales canales de adquisición de clientes?" 
+                  : "Ótimo! Quais são seus principais canais de aquisição de clientes?"}
               </h1>
               
               <p className="text-sm text-zinc-500 sm:text-base">
