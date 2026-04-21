@@ -6,6 +6,8 @@ import "react-phone-number-input/style.css";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getTracking } from "@/lib/tracking";
+import { scoreQuiz, tierFromScore } from "@/lib/quiz-scoring";
 
 import { KingKongLogoLink } from "./KingKongLogoLink";
 
@@ -107,6 +109,8 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     website: ""
   });
   const [defaultCountry, setDefaultCountry] = useState<any>("US");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const nameId = useId();
@@ -304,16 +308,120 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     setStep(12);
   }
 
-  function onFinalSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onFinalSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!finalForm.phone) return;
-    
-    // Log or send the data to the CRM
-    console.log("Final form submitted:", finalForm);
-    
-    // Redirect to calendar
-    alert(isEs ? "¡Redirigiendo al calendario!" : "Redirecionando para o calendário...");
-    window.location.href = isEs ? "/es/calendario" : "/calendario";
+    if (!finalForm.phone || submitting) return;
+
+    const read = (key: string) => {
+      try {
+        return sessionStorage.getItem(key) || "";
+      } catch {
+        return "";
+      }
+    };
+
+    const businessType = read("quiz_businessType");
+    const timeInBusiness = read("quiz_timeInBusiness");
+    const teamSize = read("quiz_teamSize");
+    const revenue = read("quiz_revenue");
+    const investmentReadiness = read("quiz_investmentReadiness");
+    const pinkyPromise = read("quiz_pinkyPromise");
+    const email = read("quiz_email");
+
+    const waysCsv = selectedWays.join(",");
+    const challengesCsv = selectedChallenges.join(",");
+
+    const score = scoreQuiz({
+      businessType,
+      revenue,
+      teamSize,
+      investmentReadiness,
+      commitmentConfirmed: pinkyPromise,
+      timeInBusiness,
+    });
+    const tier = tierFromScore(score);
+
+    const tracking = getTracking();
+
+    const payload = {
+      full_name: `${finalForm.firstName} ${finalForm.lastName}`.trim(),
+      email,
+      phone: finalForm.phone,
+      company: finalForm.companyName,
+      website: finalForm.website,
+
+      business_type: businessType,
+      revenue_range: revenue,
+      team_size: teamSize,
+      ways_to_get_clients: waysCsv,
+      biggest_challenge: challengesCsv,
+      investment_readiness: investmentReadiness,
+      time_in_business: timeInBusiness,
+      call_timeline: "",
+      commitment_confirmed: pinkyPromise,
+
+      quiz_score: String(score),
+      lead_tier: tier,
+
+      utm_source: tracking.utm_source,
+      utm_medium: tracking.utm_medium,
+      utm_campaign: tracking.utm_campaign,
+      utm_content: tracking.utm_content,
+      utm_term: tracking.utm_term,
+      utm_id: tracking.utm_id,
+      gclid: tracking.gclid,
+      gbraid: tracking.gbraid,
+      wbraid: tracking.wbraid,
+      fbclid: tracking.fbclid,
+      fb_browser_id: tracking.fb_browser_id,
+      fb_click_id: tracking.fb_click_id,
+      landing_page: tracking.landing_page,
+      referrer: tracking.referrer,
+    };
+
+    setSubmitError("");
+    setSubmitting(true);
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    try {
+      const res = await fetch("/api/submit-quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        success?: boolean;
+      };
+
+      if (data.success) {
+        try {
+          sessionStorage.setItem("quiz_submitted", "1");
+          sessionStorage.setItem("quiz_lead_tier", tier);
+          sessionStorage.setItem("quiz_score", String(score));
+        } catch {
+          /* ignore */
+        }
+        window.location.href = isEs ? "/es/calendario" : "/calendario";
+      } else {
+        setSubmitError(
+          isEs
+            ? "No pudimos enviar tu información. Por favor, intenta de nuevo."
+            : "Não conseguimos enviar suas informações. Por favor, tente novamente.",
+        );
+      }
+    } catch {
+      setSubmitError(
+        isEs
+          ? "Ocurrió un error. Revisa tu conexión e intenta de nuevo."
+          : "Ocorreu um erro. Verifique sua conexão e tente novamente.",
+      );
+    } finally {
+      clearTimeout(timeout);
+      setSubmitting(false);
+    }
   }
 
   const businessTypes = [
@@ -1237,14 +1345,32 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                   className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-500 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
                 />
 
+                {submitError ? (
+                  <p
+                    className="text-sm font-medium text-red-600"
+                    role="alert"
+                    aria-live="polite"
+                  >
+                    {submitError}
+                  </p>
+                ) : null}
+
                 <Button
                   type="submit"
+                  disabled={submitting}
                   className={cn(
                     "mt-2 h-auto w-full rounded-lg border-0 bg-[#CFF127] py-4 text-lg font-bold text-black shadow-md transition-all",
-                    "hover:bg-[#b8d922] hover:-translate-y-0.5"
+                    "hover:bg-[#b8d922] hover:-translate-y-0.5",
+                    "disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0",
                   )}
                 >
-                  {isEs ? "Reservar Mi Sesión Estratégica" : "Agendar Minha Sessão Estratégica"}
+                  {submitting
+                    ? isEs
+                      ? "Enviando..."
+                      : "Enviando..."
+                    : isEs
+                      ? "Reservar Mi Sesión Estratégica"
+                      : "Agendar Minha Sessão Estratégica"}
                 </Button>
               </form>
             </div>

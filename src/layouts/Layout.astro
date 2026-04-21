@@ -48,5 +48,9 @@ const {
 	</head>
 	<body class="min-h-screen bg-background text-foreground font-sans antialiased">
 		<slot />
+		<script>
+			import { initTracking } from "../lib/tracking";
+			initTracking();
+		</script>
 	</body>
 </html>
