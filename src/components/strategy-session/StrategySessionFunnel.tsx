@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Check, HardHat, Users, Home, FileText, Search, Ban } from "lucide-react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -55,8 +55,35 @@ function ProgressStrip({ filled }: { filled: number }) {
   );
 }
 
+const FacebookIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="#1877F2">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+  </svg>
+);
+
+const GoogleIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+  </svg>
+);
+
+const waysToGetClients = [
+  { id: "contratista", pt: "Contratista", es: "Contratista", icon: <HardHat className="h-9 w-9 text-amber-500" strokeWidth={1.5} /> },
+  { id: "indicacao", pt: "Indicação", es: "Recomendación", icon: <Users className="h-9 w-9 text-indigo-500" strokeWidth={1.5} /> },
+  { id: "facebook", pt: "Facebook ads", es: "Facebook ads", icon: <FacebookIcon className="h-9 w-9" /> },
+  { id: "google", pt: "Google Ads", es: "Google Ads", icon: <GoogleIcon className="h-9 w-9" /> },
+  { id: "nextdoor", pt: "Nextdoor Ads", es: "Nextdoor Ads", icon: <Home className="h-9 w-9 text-emerald-500" strokeWidth={1.5} /> },
+  { id: "door_hangers", pt: "Door Hangers", es: "Door Hangers", icon: <FileText className="h-9 w-9 text-orange-400" strokeWidth={1.5} /> },
+  { id: "seo", pt: "SEO", es: "SEO", icon: <Search className="h-9 w-9 text-purple-500" strokeWidth={1.5} /> },
+  { id: "nenhum", pt: "Nenhum", es: "Ninguno", icon: <Ban className="h-9 w-9 text-red-500" strokeWidth={1.5} /> },
+];
+
 export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "es" }) {
   const [step, setStep] = useState(0);
+  const [selectedWays, setSelectedWays] = useState<string[]>([]);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const nameId = useId();
 
@@ -138,6 +165,36 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       /* ignore */
     }
     setStep(5);
+  }
+
+  function toggleWay(id: string) {
+    if (id === "nenhum") {
+      if (selectedWays.includes("nenhum")) {
+        setSelectedWays([]);
+      } else {
+        setSelectedWays(["nenhum"]);
+      }
+      return;
+    }
+
+    let newWays = selectedWays.filter(w => w !== "nenhum");
+
+    if (newWays.includes(id)) {
+      newWays = newWays.filter(w => w !== id);
+    } else {
+      newWays.push(id);
+    }
+    setSelectedWays(newWays);
+  }
+
+  function onWaysSubmit() {
+    if (selectedWays.length === 0) return;
+    try {
+      sessionStorage.setItem("quiz_waysToGetClients", selectedWays.join(", "));
+    } catch {
+      /* ignore */
+    }
+    setStep(6);
   }
 
   const businessTypes = [
@@ -520,6 +577,75 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                     </span>
                   </button>
                 )})}
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {step === 5 ? (
+          <div
+            className={cn(
+              "flex w-full max-w-3xl flex-col self-center",
+              STEP_STACK_GAP,
+            )}
+          >
+            <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
+              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                {isEs 
+                  ? "¡Genial! ¿Qué tipos de marketing estás utilizando actualmente?" 
+                  : "Ok ótimo! Quais tipos de marketing você está usando atualmente?"}
+              </h1>
+              
+              <p className="text-sm text-zinc-500 sm:text-base">
+                {isEs
+                  ? "(Selecciona más de uno si corresponde)"
+                  : "(Selecione mais de um se aplicável)"}
+              </p>
+
+              <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4 sm:gap-x-8 sm:gap-y-10">
+                {waysToGetClients.map((way) => {
+                  const isSelected = selectedWays.includes(way.id);
+                  return (
+                    <button
+                      key={way.id}
+                      type="button"
+                      onClick={() => toggleWay(way.id)}
+                      className="group flex flex-col items-center gap-3 focus:outline-none"
+                    >
+                      <div className={cn(
+                        "relative flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-full bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] transition-all duration-200",
+                        isSelected ? "ring-2 ring-[#CFF127] ring-offset-2" : "group-hover:-translate-y-1 group-hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)]"
+                      )}>
+                        {way.icon}
+                        {isSelected && (
+                          <div className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#CFF127] text-black shadow-sm">
+                            <Check className="h-4 w-4" strokeWidth={3} />
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-center text-sm font-medium text-zinc-600 sm:text-base">
+                        {isEs ? way.es : way.pt}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="mt-10 flex justify-center">
+                <Button
+                  type="button"
+                  onClick={onWaysSubmit}
+                  disabled={selectedWays.length === 0}
+                  className={cn(
+                    "h-auto w-full max-w-[16rem] gap-2 rounded-lg border-0 bg-[#CFF127] py-4 text-lg font-bold text-black shadow-md transition-all",
+                    "hover:bg-[#b8d922] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
+                  )}
+                >
+                  {isEs ? "Continuar" : "Continuar"}
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 12h16m-7-7 7 7-7 7" />
+                  </svg>
+                </Button>
               </div>
             </div>
           </div>
