@@ -209,6 +209,15 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     setStep(6);
   }
 
+  function handleTeamSizeSelect(size: string) {
+    try {
+      sessionStorage.setItem("quiz_teamSize", size);
+    } catch {
+      /* ignore */
+    }
+    setStep(7);
+  }
+
   const businessTypes = [
     {
       icon: "🔧",
@@ -257,6 +266,29 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       icon: "🏆",
       pt: "3 anos ou mais",
       es: "3 años o más"
+    }
+  ];
+
+  const teamSizeOptions = [
+    {
+      icon: "👤",
+      pt: "Só eu",
+      es: "Solo yo"
+    },
+    {
+      icon: "👥",
+      pt: "2 – 4 pessoas",
+      es: "2 – 4 personas"
+    },
+    {
+      icon: "🏢",
+      pt: "5 – 10 pessoas",
+      es: "5 – 10 personas"
+    },
+    {
+      icon: "🚀",
+      pt: "10+ pessoas",
+      es: "10+ personas"
     }
   ];
 
@@ -658,6 +690,43 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 12h16m-7-7 7 7-7 7" />
                   </svg>
                 </Button>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {step === 6 ? (
+          <div
+            className={cn(
+              "flex w-full max-w-2xl flex-col self-center",
+              STEP_STACK_GAP,
+            )}
+          >
+            <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
+              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                {isEs ? "¿Cuál es el tamaño de tu equipo?" : "Qual é o tamanho da sua equipe?"}
+              </h1>
+              
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+                {teamSizeOptions.map((item) => {
+                  const label = isEs ? item.es : item.pt;
+                  return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => handleTeamSizeSelect(label)}
+                    className={cn(
+                      "group flex w-full items-center gap-3 sm:gap-4 rounded-full border border-[#E5E7EB] bg-white px-4 py-3.5 sm:px-5 sm:py-4 text-left shadow-sm transition-all",
+                      "hover:border-[#FF5E00] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FF5E00]/60"
+                    )}
+                  >
+                    <div className="flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full border-2 border-zinc-200 bg-zinc-100 transition-colors group-hover:border-[#FF5E00] group-hover:bg-white" />
+                    <span className="text-[15px] font-medium text-zinc-700 sm:text-base truncate">
+                      <span className="mr-2 text-lg">{item.icon}</span>
+                      {label}
+                    </span>
+                  </button>
+                )})}
               </div>
             </div>
           </div>
