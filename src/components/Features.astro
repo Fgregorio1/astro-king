@@ -6,24 +6,32 @@ interface Props {
 const { lang = "pt" } = Astro.props;
 const isEs = lang === "es";
 
+const now = new Date();
+const updatedDate = new Intl.DateTimeFormat(isEs ? "es-ES" : "pt-BR", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+}).format(now);
+
 const t = isEs
   ? {
-      hook: "Oye. Ya estuvimos en tus zapatos.",
+      updated: `Actualizado: ${updatedDate}`,
+      salutation: "Querido dueño de negocio,",
+
+      hook: "Ya estuvimos en tus zapatos.",
       line1: "Despertando antes del sol.",
       line2: "Herramientas en la camioneta. Café en la mano.",
       line3: "Construyendo algo real — para tu familia, para tu futuro.",
 
       question: "¿Y hacer crecer un negocio en este país?",
-      hardLead: "Es",
-      hardWord: "difícil",
-      hardEmphasis: "Difícil, de ver*as.",
+      hard: "Es difícil. **Difícil, de ver*as.**",
 
       pain1: "Probablemente estás preocupado de dónde va a venir el próximo cliente.",
       pain2: "No cualquier cliente — uno que realmente valore tu trabajo.",
       pain3: "Uno que no te subestime por tu acento o por tu nombre.",
 
       stressed:
-        "Estás estresado. Durmiendo como bebé con cólicos y gallo en el mismo cuarto.",
+        "Estresado. Durmiendo como bebé con cólicos y gallo en el mismo cuarto.",
 
       everyoneHeader: "Y mientras tanto, todo el mundo tiene una opinión:",
       voice1: '"Necesitas un sitio web, mano."',
@@ -38,57 +46,60 @@ const t = isEs
       q4: "¿Montar un programa de referidos?",
       q5: "¿Gastar $3k en un logo?",
 
-      scream: "¡Por el amor de Dios, que alguien me ayude!",
+      scream: "*por el amor de Dios, que alguien me ayude*",
 
       notAlone:
-        "Mira — la mayoría de los dueños de negocios de servicios que están empezando pasan por esto…",
+        "Mira — a la mayoría de los dueños de negocios de servicios que están empezando les pasa esto…",
       confused1: "Es un sentimiento confuso…",
-      confused2: "Mezclado con \"tengo que hacerlo todo solo\"…",
-      confused3: "Sazonado con \"no sé en quién confiar.\"",
+      confused2: 'Mezclado con "tengo que hacerlo todo solo"…',
+      confused3: 'Sazonado con "no sé en quién confiar."',
 
-      callLead: "Yo le llamo a esto",
-      callName: "El síndrome del Inmigrante.",
+      syndrome:
+        "Le llamamos a esto **el síndrome del Inmigrante**.",
 
       describe1:
         "Una zona caliente, sofocante y confusa donde crees que eres empresario porque abriste una LLC — pero te convertiste en el empleado peor pagado de la empresa.",
       describe2:
         "Y piensas que vender tu trabajo 40% más barato para no tener el calendario vacío va a resolver tus problemas.",
 
-      bridgeLead: "Pero aquí va la verdad —",
-      bridgeName: "Existe una solución.",
+      bridge: "Pero aquí va la verdad — **existe una solución**.",
 
-      heroIntro: "Tal vez no lo sepas, pero en los ojos de un Americano…",
-      heroLead: "Eres un",
-      heroWord: "súper héroe",
-      heroParen: "(Y la persona correcta para resolver sus problemas).",
+      heroIntro:
+        "Tal vez no lo sepas, pero en los ojos de un Americano, eres un **súper héroe**.",
+      heroParen: "(Y la persona correcta para resolver sus problemas.)",
+
       traits: "Tu habilidad. Tu confiabilidad. Tu palabra.",
-      traitsGold: "Eso es oro.",
+      traitsGold: "**Eso es oro.**",
 
       promise:
-        "Solo necesitas el sistema correcto para transformar eso en un flujo constante de clientes, reseñas de 5 estrellas y referidos que siguen llegando a la palma de tus manos — sin el caos.",
+        "Solo necesitas el sistema correcto para transformar eso en un flujo constante de clientes, reseñas de 5 estrellas y referidos — sin el caos.",
+
+      closing: "Todo comienza eligiendo tu camino a continuación…",
+      angels: "***\\*cue coro de ángeles\\****",
 
       ctaTitle: "Entonces, desde donde estés empezando…",
-      ctaSubtitle: "Todo comienza eligiendo tu camino abajo.",
+      ctaSubtitle: "Elige tu camino abajo.",
       ctaPrimary: "Contrátanos para hacerlo por ti",
       ctaSecondary: "Aprende a hacerlo tú mismo",
     }
   : {
-      hook: "Ei. Já estivemos na sua pele.",
+      updated: `Atualizado: ${updatedDate}`,
+      salutation: "Querido dono de negócio,",
+
+      hook: "Já estivemos na sua pele.",
       line1: "Acordando antes do sol.",
       line2: "Ferramentas no carro. Café na mão.",
       line3: "Construindo algo real — pra sua família, pro seu futuro.",
 
       question: "E fazer um negócio crescer nesse país?",
-      hardLead: "É",
-      hardWord: "difícil",
-      hardEmphasis: "Difícil, pra c*ralho.",
+      hard: "É difícil. **Difícil, pra c*ralho.**",
 
       pain1: "Você provavelmente está preocupado de onde vai vir o próximo cliente.",
       pain2: "Não qualquer cliente — um que realmente valorize o seu trabalho.",
       pain3: "Um que não te subestime por causa do seu sotaque ou do seu nome.",
 
       stressed:
-        "Você está estressado. Dormindo igual bebê com cólica e galo no mesmo quarto.",
+        "Estressado. Dormindo igual bebê com cólica e galo no mesmo quarto.",
 
       everyoneHeader: "E enquanto isso, todo mundo tem uma opinião:",
       voice1: '"Você precisa de um site, mano."',
@@ -103,147 +114,124 @@ const t = isEs
       q4: "Montar um programa de indicações?",
       q5: "Gastar $3k num logo?",
 
-      scream: "Pelo amor de Deus, alguém me ajuda!",
+      scream: "*pelo amor de Deus, alguém me ajuda*",
 
       notAlone:
-        "Olha — a maioria dos donos de negócios de serviços que estão começando passam por isso…",
+        "Olha — a maioria dos donos de negócios de serviços que estão começando passa por isso…",
       confused1: "É um sentimento confuso…",
-      confused2: "Misturado com \"tenho que fazer tudo sozinho\"…",
-      confused3: "Temperado com \"não sei em quem confiar.\"",
+      confused2: 'Misturado com "tenho que fazer tudo sozinho"…',
+      confused3: 'Temperado com "não sei em quem confiar."',
 
-      callLead: "Eu chamo isso de",
-      callName: "A síndrome do Imigrante.",
+      syndrome:
+        "A gente chama isso de **síndrome do Imigrante**.",
 
       describe1:
         "Uma zona quente, abafada e confusa onde você acha que é empresário porque abriu uma LLC — mas virou o empregado menos pago da empresa.",
       describe2:
         "E acha que vender seu trabalho 40% mais barato pra não ficar com o calendário vazio vai resolver seus problemas.",
 
-      bridgeLead: "Mas aqui vai a verdade —",
-      bridgeName: "Existe uma solução.",
+      bridge: "Mas aqui vai a verdade — **existe uma solução**.",
 
-      heroIntro: "Talvez você não saiba, mas nos olhos de um Americano…",
-      heroLead: "Você é um",
-      heroWord: "super herói",
-      heroParen: "(E a pessoa certa que vai resolver os problemas dele).",
+      heroIntro:
+        "Talvez você não saiba, mas nos olhos de um Americano, você é um **super herói**.",
+      heroParen: "(E a pessoa certa que vai resolver os problemas dele.)",
+
       traits: "Sua habilidade. Sua confiabilidade. Sua palavra.",
-      traitsGold: "Isso é ouro.",
+      traitsGold: "**Isso é ouro.**",
 
       promise:
-        "Você só precisa do sistema certo pra transformar isso num fluxo constante de clientes, avaliações 5 estrelas e indicações que continuam chegando na palma das suas mãos — sem o caos.",
+        "Você só precisa do sistema certo pra transformar isso num fluxo constante de clientes, avaliações 5 estrelas e indicações — sem o caos.",
+
+      closing: "Tudo começa escolhendo o seu caminho abaixo…",
+      angels: "***\\*coro de anjos cantando\\****",
 
       ctaTitle: "Então, de onde você estiver começando…",
-      ctaSubtitle: "Tudo começa escolhendo o seu caminho abaixo.",
+      ctaSubtitle: "Escolha o seu caminho abaixo.",
       ctaPrimary: "Contrate-nos para fazer por você",
       ctaSecondary: "Aprenda a fazer você mesmo",
     };
+
+// Inline markdown-ish renderer: **bold** and *italic* → HTML.
+// Kept tiny on purpose; only used on copy we control above.
+function renderInline(s: string): string {
+  return s
+    .replace(/\\\*/g, "&#42;")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/&#42;/g, "*");
+}
 ---
 
 <section class="py-24 md:py-32 bg-[#f4f4f5] text-zinc-900 border-t-8 border-primary">
-  <div class="container mx-auto px-4 max-w-4xl">
-    <div class="prose prose-lg md:prose-2xl mx-auto font-sans">
-      <p class="font-bold text-2xl md:text-3xl mb-8">{t.hook}</p>
-
-      <p class="mb-4 text-xl md:text-2xl font-medium text-zinc-700">{t.line1}</p>
-      <p class="mb-4 text-xl md:text-2xl font-medium text-zinc-700">{t.line2}</p>
-      <p class="mb-14 text-xl md:text-2xl font-medium text-zinc-700">{t.line3}</p>
-
-      <p class="mb-6 text-xl md:text-2xl font-medium">{t.question}</p>
-
-      <p class="mb-14 font-black text-3xl md:text-5xl leading-tight tracking-tight uppercase">
-        {t.hardLead}
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800">
-          {` ${t.hardWord}`}
-        </span>.
-        <br />
-        <span class="border-b-4 border-primary pb-1">{t.hardEmphasis}</span>
+  <div class="container mx-auto px-4">
+    <article class="mx-auto max-w-2xl font-sans text-zinc-800">
+      <p class="mb-10 text-sm font-medium uppercase tracking-widest text-zinc-500">
+        {t.updated}
       </p>
 
-      <p class="mb-10 text-xl md:text-2xl leading-relaxed text-zinc-700">{t.pain1}</p>
-      <p class="mb-10 text-xl md:text-2xl leading-relaxed text-zinc-700">{t.pain2}</p>
-      <p class="mb-16 text-xl md:text-2xl leading-relaxed text-zinc-700">{t.pain3}</p>
-
-      <p class="mb-14 text-xl md:text-2xl font-medium leading-relaxed text-zinc-800">
-        {t.stressed}
+      <p class="mb-6 text-lg md:text-xl font-medium text-zinc-900">
+        {t.salutation}
       </p>
 
-      <p class="mb-10 font-black text-3xl md:text-4xl uppercase tracking-tight">
-        {t.everyoneHeader}
-      </p>
+      <div class="space-y-6 text-lg md:text-xl leading-relaxed">
+        <p>{t.hook}</p>
 
-      <div class="mb-14 border-l-4 border-primary pl-6 md:pl-8 space-y-4 text-xl md:text-2xl italic text-zinc-700">
+        <p>{t.line1}</p>
+        <p>{t.line2}</p>
+        <p>{t.line3}</p>
+
+        <p>{t.question}</p>
+        <p set:html={renderInline(t.hard)} />
+
+        <p>{t.pain1}</p>
+        <p>{t.pain2}</p>
+        <p>{t.pain3}</p>
+
+        <p>{t.stressed}</p>
+
+        <p>{t.everyoneHeader}</p>
+
         <p>{t.voice1}</p>
         <p>{t.voice2}</p>
         <p>{t.voice3}</p>
+
+        <p>{t.selfIntro}</p>
+
+        <p>{t.q1}</p>
+        <p>{t.q2}</p>
+        <p>{t.q3}</p>
+        <p>{t.q4}</p>
+        <p>{t.q5}</p>
+
+        <p set:html={renderInline(t.scream)} />
+
+        <p>{t.notAlone}</p>
+        <p>{t.confused1}</p>
+        <p>{t.confused2}</p>
+        <p>{t.confused3}</p>
+
+        <p set:html={renderInline(t.syndrome)} />
+
+        <p>{t.describe1}</p>
+        <p>{t.describe2}</p>
+
+        <p set:html={renderInline(t.bridge)} />
+
+        <p set:html={renderInline(t.heroIntro)} />
+        <p class="text-zinc-600"><em>{t.heroParen}</em></p>
+
+        <p>{t.traits}</p>
+        <p set:html={renderInline(t.traitsGold)} />
+
+        <p>{t.promise}</p>
+
+        <p>{t.closing}</p>
+        <p class="text-zinc-500" set:html={renderInline(t.angels)} />
       </div>
+    </article>
 
-      <p class="mb-6 text-xl md:text-2xl font-medium">{t.selfIntro}</p>
-
-      <ul class="list-none mb-14 space-y-6 text-xl md:text-2xl font-medium text-zinc-800 border-l-4 border-primary pl-6 md:pl-8">
-        <li>{t.q1}</li>
-        <li>{t.q2}</li>
-        <li>{t.q3}</li>
-        <li>{t.q4}</li>
-        <li>{t.q5}</li>
-      </ul>
-
-      <p class="mb-16 font-black text-3xl md:text-4xl text-red-600 italic uppercase text-center">
-        {t.scream}
-      </p>
-
-      <p class="mb-8 text-xl md:text-2xl leading-relaxed">{t.notAlone}</p>
-      <p class="mb-4 text-xl md:text-2xl leading-relaxed">{t.confused1}</p>
-      <p class="mb-4 text-xl md:text-2xl leading-relaxed">{t.confused2}</p>
-      <p class="mb-16 text-xl md:text-2xl leading-relaxed">{t.confused3}</p>
-
-      <div class="text-center my-20">
-        <p class="font-heading text-5xl md:text-7xl uppercase tracking-tighter mb-4">
-          {t.callLead}
-          <br />
-          <span class="text-red-600 border-b-8 border-primary inline-block pb-2">
-            {t.callName}
-          </span>
-        </p>
-      </div>
-
-      <p class="mb-10 text-xl md:text-2xl leading-relaxed text-center max-w-3xl mx-auto">
-        {t.describe1}
-      </p>
-      <p class="mb-20 text-xl md:text-2xl font-bold leading-relaxed text-center max-w-3xl mx-auto">
-        {t.describe2}
-      </p>
-
-      <p class="mb-4 text-xl md:text-2xl font-medium text-zinc-700 text-center">
-        {t.bridgeLead}
-      </p>
-      <p class="mb-20 font-black text-3xl md:text-5xl uppercase tracking-tight text-center">
-        <span class="border-b-4 border-primary pb-1">{t.bridgeName}</span>
-      </p>
-
-      <p class="mb-8 text-xl md:text-2xl leading-relaxed">{t.heroIntro}</p>
-
-      <p class="mb-6 font-black text-3xl md:text-5xl leading-tight tracking-tight uppercase">
-        {t.heroLead}
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-600">
-          {` ${t.heroWord}`}
-        </span>.
-      </p>
-      <p class="mb-12 text-lg md:text-xl leading-relaxed italic text-zinc-600">
-        {t.heroParen}
-      </p>
-
-      <p class="mb-4 text-xl md:text-2xl font-medium">{t.traits}</p>
-      <p class="mb-16 font-black text-4xl md:text-5xl uppercase">
-        <span class="text-zinc-950 border-b-8 border-primary inline-block pb-1">
-          {t.traitsGold}
-        </span>
-      </p>
-
-      <p class="mb-20 text-xl md:text-2xl leading-relaxed text-zinc-800">
-        {t.promise}
-      </p>
-
-      <div class="bg-white border-4 border-zinc-950 rounded-xl p-8 md:p-12 mt-16 text-center shadow-[10px_10px_0px_0px_rgba(208,242,36,1)] transition-transform hover:-translate-y-1 hover:translate-x-1 hover:shadow-[5px_5px_0px_0px_rgba(208,242,36,1)]">
+    <div class="mx-auto max-w-3xl mt-20">
+      <div class="bg-white border-4 border-zinc-950 rounded-xl p-8 md:p-12 text-center shadow-[10px_10px_0px_0px_rgba(208,242,36,1)] transition-transform hover:-translate-y-1 hover:translate-x-1 hover:shadow-[5px_5px_0px_0px_rgba(208,242,36,1)]">
         <h3 class="font-heading text-4xl md:text-5xl uppercase tracking-tight mb-6">
           {t.ctaTitle}
         </h3>
