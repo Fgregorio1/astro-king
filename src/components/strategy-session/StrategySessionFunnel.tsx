@@ -103,6 +103,9 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
   const emailId = useId();
   const [emailError, setEmailError] = useState("");
 
+  const websiteInputRef = useRef<HTMLInputElement>(null);
+  const websiteId = useId();
+
   const isEs = lang === "es";
 
   useEffect(() => {
@@ -118,6 +121,8 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       nameInputRef.current?.focus();
     } else if (step === 2) {
       emailInputRef.current?.focus();
+    } else if (step === 7) {
+      websiteInputRef.current?.focus();
     }
   }, [step]);
 
@@ -216,6 +221,18 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       /* ignore */
     }
     setStep(7);
+  }
+
+  function onWebsiteSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const website = websiteInputRef.current?.value.trim();
+    if (!website) return;
+    try {
+      sessionStorage.setItem("quiz_website", website);
+    } catch {
+      /* ignore */
+    }
+    setStep(8);
   }
 
   const businessTypes = [
@@ -729,6 +746,65 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                 )})}
               </div>
             </div>
+          </div>
+        ) : null}
+
+        {step === 7 ? (
+          <div
+            className={cn(
+              "flex w-full max-w-md flex-col self-center",
+              STEP_STACK_GAP,
+            )}
+          >
+            <form
+              className={cn("flex flex-col", STEP_STACK_GAP)}
+              onSubmit={onWebsiteSubmit}
+            >
+              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                {isEs
+                  ? "¿Cuál es el sitio web de tu empresa?"
+                  : "Qual é o site da sua empresa?"}
+              </h1>
+
+              <div className="flex flex-col gap-3">
+                <label className="sr-only" htmlFor={websiteId}>
+                  {isEs ? "Sitio web" : "Site"}
+                </label>
+                <input
+                  ref={websiteInputRef}
+                  id={websiteId}
+                  name="website"
+                  type="url"
+                  autoComplete="url"
+                  maxLength={200}
+                  placeholder={isEs ? "https://ejemplo.com" : "https://exemplo.com.br"}
+                  className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
+                />
+                <Button
+                  type="submit"
+                  formNoValidate
+                  className={cn(
+                    "group/quiz-cta h-auto w-full gap-2 rounded-lg border-0 bg-zinc-200 py-3.5 text-base font-semibold text-zinc-500 shadow-none",
+                    "hover:bg-zinc-300/80 hover:text-zinc-600 flex items-center justify-center",
+                  )}
+                >
+                  {isEs ? "Continuar" : "Continuar"}
+                  <svg
+                    className="h-6 w-6 shrink-0 animate-[arrowSlide_1.5s_infinite_ease-in-out] sm:h-7 sm:w-7"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    viewBox="0 0 24 24"
+                    aria-hidden={true}
+                  >
+                    <path d="M4 12h16" />
+                    <path d="m13 5 7 7-7 7" />
+                  </svg>
+                </Button>
+              </div>
+            </form>
           </div>
         ) : null}
       </main>
