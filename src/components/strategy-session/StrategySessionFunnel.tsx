@@ -122,6 +122,33 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     setStep(3);
   }
 
+  function handleBusinessTypeSelect(type: string) {
+    try {
+      sessionStorage.setItem("quiz_businessType", type);
+    } catch {
+      /* ignore */
+    }
+    setStep(4);
+  }
+
+  const businessTypesPt = [
+    "HVAC / Encanamento / Elétrica",
+    "Jardinagem / Manutenção de Jardins",
+    "Limpeza / Higienização",
+    "Construção / Reforma / Telhados",
+    "Outro Serviço Residencial"
+  ];
+
+  const businessTypesEs = [
+    "HVAC / Plomería / Electricidad",
+    "Jardinería / Mantenimiento de Jardines",
+    "Limpieza / Higienización",
+    "Construcción / Remodelación / Techos",
+    "Otro Servicio Residencial"
+  ];
+
+  const businessTypes = isEs ? businessTypesEs : businessTypesPt;
+
   return (
     <div className="relative flex min-h-screen flex-col bg-white font-sans text-black">
       {/* Nav: logo only; shadow ends here — dots are NOT inside nav */}
@@ -373,6 +400,46 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                 </Button>
               </div>
             </form>
+          </div>
+        ) : null}
+
+        {step === 3 ? (
+          <div
+            className={cn(
+              "flex w-full max-w-2xl flex-col self-center",
+              STEP_STACK_GAP,
+            )}
+          >
+            <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
+              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                {isEs ? "¿Cuál es tu tipo de negocio?" : "Qual é o seu tipo de negócio?"}
+              </h1>
+              
+              <p className="text-base text-zinc-500 sm:text-lg">
+                {isEs
+                  ? "Te preguntamos esto primero para ver si haríamos un buen equipo. Y en segundo lugar, para identificar cuáles son las mejores estrategias de crecimiento dentro de tu presupuesto."
+                  : "Estamos perguntando isso primeiro para ver se seríamos uma boa combinação. E em segundo lugar, para identificar quais são as melhores estratégias de crescimento dentro do seu orçamento."}
+              </p>
+
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+                {businessTypes.map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => handleBusinessTypeSelect(type)}
+                    className={cn(
+                      "group flex w-full items-center gap-4 rounded-full border border-[#E5E7EB] bg-white px-5 py-4 text-left shadow-sm transition-all",
+                      "hover:border-[#CFF127] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CFF127]/60"
+                    )}
+                  >
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-zinc-200 bg-zinc-100 transition-colors group-hover:border-[#CFF127] group-hover:bg-white" />
+                    <span className="text-base font-medium text-zinc-700 sm:text-lg">
+                      {type}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         ) : null}
       </main>
