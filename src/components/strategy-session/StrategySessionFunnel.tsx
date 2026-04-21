@@ -1,6 +1,8 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { ChevronLeft, Check, HardHat, Users, Home, FileText, Search, Ban } from "lucide-react";
 import { z } from "zod";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -97,6 +99,15 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
   const [step, setStep] = useState(0);
   const [selectedWays, setSelectedWays] = useState<string[]>([]);
   const [selectedChallenges, setSelectedChallenges] = useState<string[]>([]);
+  const [finalForm, setFinalForm] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    companyName: "",
+    website: ""
+  });
+  const [defaultCountry, setDefaultCountry] = useState<any>("US");
+
   const nameInputRef = useRef<HTMLInputElement>(null);
   const nameId = useId();
 
@@ -115,6 +126,14 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     if (hash) {
       window.history.replaceState(null, "", pathname + search);
     }
+
+    try {
+      const locale = navigator.language;
+      const country = locale.split("-")[1];
+      if (country) {
+        setDefaultCountry(country.toUpperCase());
+      }
+    } catch (e) {}
   }, []);
 
   useEffect(() => {
@@ -124,6 +143,12 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       emailInputRef.current?.focus();
     } else if (step === 7) {
       websiteInputRef.current?.focus();
+    } else if (step === 12) {
+      setFinalForm(prev => ({
+        ...prev,
+        firstName: sessionStorage.getItem("quiz_firstName") || "",
+        website: sessionStorage.getItem("quiz_website") || ""
+      }));
     }
   }, [step]);
 
@@ -277,6 +302,18 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       /* ignore */
     }
     setStep(12);
+  }
+
+  function onFinalSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!finalForm.phone) return;
+    
+    // Log or send the data to the CRM
+    console.log("Final form submitted:", finalForm);
+    
+    // Redirect to calendar
+    alert(isEs ? "¡Redirigiendo al calendario!" : "Redirecionando para o calendário...");
+    window.location.href = isEs ? "/es/calendario" : "/calendario";
   }
 
   const businessTypes = [
@@ -1127,6 +1164,89 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                   )
                 })}
               </div>
+            </div>
+          </div>
+        ) : null}
+
+        {step === 12 ? (
+          <div
+            className={cn(
+              "flex w-full max-w-2xl flex-col self-center",
+              STEP_STACK_GAP,
+            )}
+          >
+            <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
+              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                {isEs 
+                  ? "¡BOOM! 👊 Parece que podemos ayudar DRAMÁTICAMENTE a hacer crecer tu negocio usando algunos de nuestros embudos y estrategias de marketing probados, ¡simplemente ingresa tus datos a continuación!" 
+                  : "BOOM! 👊 Parece que podemos ajudar DRAMATICAMENTE a expandir o seu negócio usando alguns de nossos funis e estratégias de marketing comprovados, basta inserir seus dados abaixo!"}
+              </h1>
+              
+              <p className="text-sm text-zinc-500 sm:text-base mb-4">
+                {isEs
+                  ? "Por favor, completa tus datos y serás dirigido a un calendario en la página siguiente para elegir la fecha y hora que mejor te convenga."
+                  : "Por favor, preencha seus dados e você será direcionado para um calendário na próxima página para escolher o melhor dia e horário para você."}
+              </p>
+
+              <form onSubmit={onFinalSubmit} className="mx-auto flex w-full max-w-lg flex-col gap-4 text-left">
+                <input
+                  type="text"
+                  required
+                  placeholder={isEs ? "Nombre *" : "Primeiro Nome *"}
+                  value={finalForm.firstName}
+                  onChange={(e) => setFinalForm(prev => ({ ...prev, firstName: e.target.value }))}
+                  className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-500 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
+                />
+                
+                <input
+                  type="text"
+                  required
+                  placeholder={isEs ? "Apellido *" : "Sobrenome *"}
+                  value={finalForm.lastName}
+                  onChange={(e) => setFinalForm(prev => ({ ...prev, lastName: e.target.value }))}
+                  className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-500 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
+                />
+
+                <div className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 focus-within:border-[#7C8A9E] focus-within:ring-2 focus-within:ring-zinc-300/60">
+                  <PhoneInput
+                    international
+                    defaultCountry={defaultCountry}
+                    value={finalForm.phone}
+                    onChange={(val) => setFinalForm(prev => ({ ...prev, phone: val || "" }))}
+                    className="flex gap-3 [&_.PhoneInputInput]:w-full [&_.PhoneInputInput]:border-none [&_.PhoneInputInput]:bg-transparent [&_.PhoneInputInput]:p-0 [&_.PhoneInputInput]:focus:outline-none [&_.PhoneInputInput]:focus:ring-0 [&_.PhoneInputInput]:placeholder:text-zinc-500"
+                    placeholder={isEs ? "Móvil *" : "Celular *"}
+                    required
+                  />
+                </div>
+
+                <input
+                  type="text"
+                  required
+                  placeholder={isEs ? "Nombre de la Empresa *" : "Nome da Empresa *"}
+                  value={finalForm.companyName}
+                  onChange={(e) => setFinalForm(prev => ({ ...prev, companyName: e.target.value }))}
+                  className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-500 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
+                />
+
+                <input
+                  type="url"
+                  required
+                  placeholder={isEs ? "Sitio Web *" : "Site *"}
+                  value={finalForm.website}
+                  onChange={(e) => setFinalForm(prev => ({ ...prev, website: e.target.value }))}
+                  className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-500 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
+                />
+
+                <Button
+                  type="submit"
+                  className={cn(
+                    "mt-2 h-auto w-full rounded-lg border-0 bg-[#CFF127] py-4 text-lg font-bold text-black shadow-md transition-all",
+                    "hover:bg-[#b8d922] hover:-translate-y-0.5"
+                  )}
+                >
+                  {isEs ? "Reservar Mi Sesión Estratégica" : "Agendar Minha Sessão Estratégica"}
+                </Button>
+              </form>
             </div>
           </div>
         ) : null}
