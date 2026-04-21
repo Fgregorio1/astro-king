@@ -131,6 +131,15 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     setStep(4);
   }
 
+  function handleTimeInBusinessSelect(time: string) {
+    try {
+      sessionStorage.setItem("quiz_timeInBusiness", time);
+    } catch {
+      /* ignore */
+    }
+    setStep(5);
+  }
+
   const businessTypes = [
     {
       icon: "🔧",
@@ -156,6 +165,29 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       icon: "🏡",
       pt: "Outro Serviço Residencial",
       es: "Otro Servicio Residencial"
+    }
+  ];
+
+  const timeInBusiness = [
+    {
+      icon: "⏳",
+      pt: "Menos de 6 meses",
+      es: "Menos de 6 meses"
+    },
+    {
+      icon: "🗓️",
+      pt: "6 meses – 1 ano",
+      es: "6 meses – 1 año"
+    },
+    {
+      icon: "🚀",
+      pt: "1 – 3 anos",
+      es: "1 – 3 años"
+    },
+    {
+      icon: "🏆",
+      pt: "3 anos ou mais",
+      es: "3 años o más"
     }
   ];
 
@@ -439,6 +471,43 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                     key={label}
                     type="button"
                     onClick={() => handleBusinessTypeSelect(label)}
+                    className={cn(
+                      "group flex w-full items-center gap-3 sm:gap-4 rounded-full border border-[#E5E7EB] bg-white px-4 py-3.5 sm:px-5 sm:py-4 text-left shadow-sm transition-all",
+                      "hover:border-[#FF5E00] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FF5E00]/60"
+                    )}
+                  >
+                    <div className="flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full border-2 border-zinc-200 bg-zinc-100 transition-colors group-hover:border-[#FF5E00] group-hover:bg-white" />
+                    <span className="text-[15px] font-medium text-zinc-700 sm:text-base truncate">
+                      <span className="mr-2 text-lg">{item.icon}</span>
+                      {label}
+                    </span>
+                  </button>
+                )})}
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {step === 4 ? (
+          <div
+            className={cn(
+              "flex w-full max-w-2xl flex-col self-center",
+              STEP_STACK_GAP,
+            )}
+          >
+            <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
+              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                {isEs ? "¿Cuánto tiempo llevas en el negocio?" : "Quanto tempo você está no negócio?"}
+              </h1>
+              
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+                {timeInBusiness.map((item) => {
+                  const label = isEs ? item.es : item.pt;
+                  return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => handleTimeInBusinessSelect(label)}
                     className={cn(
                       "group flex w-full items-center gap-3 sm:gap-4 rounded-full border border-[#E5E7EB] bg-white px-4 py-3.5 sm:px-5 sm:py-4 text-left shadow-sm transition-all",
                       "hover:border-[#FF5E00] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FF5E00]/60"
