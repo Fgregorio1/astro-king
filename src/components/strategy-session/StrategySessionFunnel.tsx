@@ -19,7 +19,7 @@ const STEP_MAIN_PY = "pt-8 pb-12 sm:pt-10 sm:pb-14";
 /** Consistent stack gap inside steps */
 const STEP_STACK_GAP = "gap-6 sm:gap-7";
 
-const DOT_COUNT = 11;
+const DOT_COUNT = 12;
 const DOT = "h-[14px] w-[14px] shrink-0 rounded-full sm:h-[16px] sm:w-[16px]";
 const LINE = "mx-[2px] h-[2px] min-w-[4px] flex-1 bg-[#D3D3D3] sm:mx-1";
 
@@ -270,6 +270,15 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     setStep(11);
   }
 
+  function handlePinkyPromiseSelect(promise: string) {
+    try {
+      sessionStorage.setItem("quiz_pinkyPromise", promise);
+    } catch {
+      /* ignore */
+    }
+    setStep(12);
+  }
+
   const businessTypes = [
     {
       icon: "🔧",
@@ -417,6 +426,21 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       es: "Ahora no, no tengo presupuesto para eso"
     }
   ];
+
+  const pinkyPromiseOptions = [
+    {
+      icon: "🙅‍♂️",
+      pt: "Não",
+      es: "No"
+    },
+    {
+      icon: "👌",
+      pt: "Sim",
+      es: "Sí"
+    }
+  ];
+
+  const firstName = typeof window !== "undefined" ? sessionStorage.getItem("quiz_firstName") || "" : "";
 
   return (
     <div className="relative flex min-h-screen flex-col bg-white font-sans text-black">
@@ -1056,6 +1080,51 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
                       </span>
                     </button>
                   );
+                })}
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {step === 11 ? (
+          <div
+            className={cn(
+              "flex w-full max-w-3xl flex-col self-center",
+              STEP_STACK_GAP,
+            )}
+          >
+            <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
+              <p className="text-sm font-medium text-zinc-500 sm:text-base">
+                {isEs
+                  ? `Ok ${firstName} lo lograste – última pregunta...`
+                  : `Ok ${firstName} você conseguiu – última pergunta...`}
+              </p>
+
+              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                {isEs 
+                  ? "¿Prometes por el dedito que si calificas para una llamada, te presentarás a la hora seleccionada?" 
+                  : "Você promete de dedinho que, se for qualificado para uma ligação, comparecerá no horário selecionado?"}
+              </h1>
+
+              <div className="mt-8 flex justify-center gap-4 sm:gap-6">
+                {pinkyPromiseOptions.map((item) => {
+                  const label = isEs ? item.es : item.pt;
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => handlePinkyPromiseSelect(label)}
+                      className={cn(
+                        "group flex h-32 w-28 flex-col items-center justify-center gap-3 rounded-xl bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] transition-all duration-200 focus:outline-none",
+                        "hover:-translate-y-1 hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] sm:h-36 sm:w-32"
+                      )}
+                    >
+                      <span className="text-3xl sm:text-4xl transition-transform group-hover:scale-110">{item.icon}</span>
+                      <span className="text-sm font-medium text-zinc-600 sm:text-base">
+                        {label}
+                      </span>
+                    </button>
+                  )
                 })}
               </div>
             </div>
