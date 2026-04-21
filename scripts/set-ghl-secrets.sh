@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Upload GHL secrets to Cloudflare for both staging and production workers.
-# Run once per worker. Requires `wrangler login` beforehand.
+# Upload GHL secrets to the Cloudflare Worker that serves latinuspro.com.
+# Requires `wrangler login` and a populated local .env beforehand.
 #
 # Usage:
-#   scripts/set-ghl-secrets.sh            # staging  (wrangler.jsonc → astro-kingkong)
-#   scripts/set-ghl-secrets.sh production # prod     (wrangler.production.jsonc → latinuspro)
+#   npm run build                # generates dist/server/wrangler.json
+#   scripts/set-ghl-secrets.sh   # pushes secrets to astro-kingkong
 
 set -euo pipefail
 
@@ -16,12 +16,13 @@ else
   exit 1
 fi
 
-CONFIG="wrangler.jsonc"
-if [[ "${1:-}" == "production" ]]; then
-  CONFIG="wrangler.production.jsonc"
+CONFIG="dist/server/wrangler.json"
+if [[ ! -f "$CONFIG" ]]; then
+  echo "$CONFIG not found. Run 'npm run build' first." >&2
+  exit 1
 fi
 
-echo "Pushing secrets to $CONFIG ..."
+echo "Pushing secrets to $CONFIG (worker: astro-kingkong) ..."
 
 push() {
   local key="$1"

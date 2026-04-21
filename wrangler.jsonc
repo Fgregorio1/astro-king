@@ -27,5 +27,9 @@
 		"traces": {
 			"enabled": false
 		}
-	}
+	},
+	"routes": [
+		{ "pattern": "latinuspro.com", "custom_domain": true },
+		{ "pattern": "www.latinuspro.com", "custom_domain": true }
+	]
 }
