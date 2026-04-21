@@ -1327,9 +1327,12 @@ export default function StrategySessionFunnel({
                   : "Por favor, preencha seus dados e você será direcionado para um calendário na próxima página para escolher o melhor dia e horário para você."}
               </p>
 
-              <form onSubmit={onFinalSubmit} className="mx-auto flex w-full max-w-lg flex-col gap-4 text-left">
+              <form onSubmit={onFinalSubmit} className="mx-auto flex w-full max-w-lg flex-col gap-4 text-left" autoComplete="on">
                 <input
                   type="text"
+                  id="final-firstName"
+                  name="firstName"
+                  autoComplete="given-name"
                   required
                   placeholder={isEs ? "Nombre *" : "Primeiro Nome *"}
                   value={finalForm.firstName}
@@ -1339,6 +1342,9 @@ export default function StrategySessionFunnel({
                 
                 <input
                   type="text"
+                  id="final-lastName"
+                  name="lastName"
+                  autoComplete="family-name"
                   required
                   placeholder={isEs ? "Apellido *" : "Sobrenome *"}
                   value={finalForm.lastName}
@@ -1354,12 +1360,18 @@ export default function StrategySessionFunnel({
                     onChange={(val) => setFinalForm(prev => ({ ...prev, phone: val || "" }))}
                     className="flex gap-3 [&_.PhoneInputInput]:w-full [&_.PhoneInputInput]:border-none [&_.PhoneInputInput]:bg-transparent [&_.PhoneInputInput]:p-0 [&_.PhoneInputInput]:focus:outline-none [&_.PhoneInputInput]:focus:ring-0 [&_.PhoneInputInput]:placeholder:text-zinc-500"
                     placeholder={isEs ? "Móvil *" : "Celular *"}
+                    id="final-phone"
+                    name="phone"
+                    autoComplete="tel"
                     required
                   />
                 </div>
 
                 <input
                   type="text"
+                  id="final-company"
+                  name="companyName"
+                  autoComplete="organization"
                   placeholder={isEs ? "Nombre de la Empresa" : "Nome da Empresa"}
                   value={finalForm.companyName}
                   onChange={(e) => setFinalForm(prev => ({ ...prev, companyName: e.target.value }))}
@@ -1368,6 +1380,8 @@ export default function StrategySessionFunnel({
 
                 <input
                   type="text"
+                  id="final-website"
+                  name="website"
                   inputMode="url"
                   autoComplete="url"
                   placeholder={isEs ? "Sitio Web" : "Site"}
