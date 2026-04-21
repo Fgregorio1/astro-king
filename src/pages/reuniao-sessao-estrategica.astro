@@ -1,8 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import StrategySessionFunnel from '../components/strategy-session/StrategySessionFunnel';
+
+export const prerender = false;
+
+const rawCountry = Astro.request.headers.get('CF-IPCountry') ?? '';
+const country = /^[A-Za-z]{2}$/.test(rawCountry) ? rawCountry.toUpperCase() : 'US';
 ---
 
 <Layout title="Sessão Estratégica - King Kong">
-  <StrategySessionFunnel client:load />
+  <StrategySessionFunnel client:load country={country} />
 </Layout>

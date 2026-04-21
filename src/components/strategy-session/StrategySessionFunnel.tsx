@@ -97,7 +97,13 @@ const waysToGetClients = [
   { id: "nenhum", pt: "Nenhum", es: "Ninguno", icon: <Ban className="h-9 w-9 text-red-500" strokeWidth={1.5} /> },
 ];
 
-export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "es" }) {
+export default function StrategySessionFunnel({
+  lang = "pt",
+  country,
+}: {
+  lang?: "pt" | "es";
+  country?: string;
+}) {
   const [step, setStep] = useState(0);
   const [selectedWays, setSelectedWays] = useState<string[]>([]);
   const [selectedChallenges, setSelectedChallenges] = useState<string[]>([]);
@@ -108,7 +114,9 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
     companyName: "",
     website: ""
   });
-  const [defaultCountry, setDefaultCountry] = useState<any>("US");
+  const [defaultCountry, setDefaultCountry] = useState<any>(
+    country && /^[A-Z]{2}$/i.test(country) ? country.toUpperCase() : "US",
+  );
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
@@ -131,27 +139,49 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
       window.history.replaceState(null, "", pathname + search);
     }
 
+    if (country && /^[A-Z]{2}$/i.test(country)) return;
+
     try {
       const locale = navigator.language;
-      const country = locale.split("-")[1];
-      if (country) {
-        setDefaultCountry(country.toUpperCase());
+      const region = locale.split("-")[1];
+      if (region && /^[A-Za-z]{2}$/.test(region)) {
+        setDefaultCountry(region.toUpperCase());
       }
     } catch (e) {}
-  }, []);
+  }, [country]);
 
   useEffect(() => {
+    const readStorage = (key: string) => {
+      try {
+        return sessionStorage.getItem(key) || "";
+      } catch {
+        return "";
+      }
+    };
+
     if (step === 1) {
-      nameInputRef.current?.focus();
+      const prefill = readStorage("quiz_firstName");
+      const el = nameInputRef.current;
+      if (el) {
+        if (prefill && !el.value) el.value = prefill;
+        el.focus();
+        if (prefill) el.select();
+      }
     } else if (step === 2) {
-      emailInputRef.current?.focus();
+      const prefill = readStorage("quiz_email");
+      const el = emailInputRef.current;
+      if (el) {
+        if (prefill && !el.value) el.value = prefill;
+        el.focus();
+        if (prefill) el.select();
+      }
     } else if (step === 7) {
       websiteInputRef.current?.focus();
     } else if (step === 12) {
       setFinalForm(prev => ({
         ...prev,
-        firstName: sessionStorage.getItem("quiz_firstName") || "",
-        website: sessionStorage.getItem("quiz_website") || ""
+        firstName: readStorage("quiz_firstName"),
+        website: readStorage("quiz_website")
       }));
     }
   }, [step]);
@@ -1329,8 +1359,7 @@ export default function StrategySessionFunnel({ lang = "pt" }: { lang?: "pt" | "
 
                 <input
                   type="text"
-                  required
-                  placeholder={isEs ? "Nombre de la Empresa *" : "Nome da Empresa *"}
+                  placeholder={isEs ? "Nombre de la Empresa" : "Nome da Empresa"}
                   value={finalForm.companyName}
                   onChange={(e) => setFinalForm(prev => ({ ...prev, companyName: e.target.value }))}
                   className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-500 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
