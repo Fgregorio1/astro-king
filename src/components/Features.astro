@@ -78,9 +78,9 @@ const t = isEs
     }
   : {
       updated: `Atualizado: ${updatedDate}`,
-      salutation: "Querido dono de negócio,",
+      salutation: "Querido empresário,",
 
-      hook: "Já estivemos na sua pele.",
+      hook: "Já estive na sua pele",
       line1: "Acordando antes do sol.",
       line2: "Ferramentas no carro. Café na mão.",
       line3: "Construindo algo real — pra sua família, pro seu futuro.",
@@ -157,11 +157,11 @@ function renderInline(s: string): string {
         {t.updated}
       </p>
 
-      <p class="mb-6 text-xl md:text-[1.375rem] font-medium text-zinc-900">
+      <p class="mb-6 text-[1.1rem] md:text-[1.5rem] font-medium text-zinc-900">
         {t.salutation}
       </p>
 
-      <div class="space-y-6 text-xl md:text-[1.375rem] leading-relaxed">
+      <div class="space-y-6 text-[1.1rem] md:text-[1.5rem] leading-relaxed">
         <p>{t.hook}</p>
 
         <p>{t.line1}</p>
