@@ -1,53 +1,83 @@
 ---
+interface Props {
+  lang?: "pt" | "es";
+}
+
+const { lang = "pt" } = Astro.props;
+const isEs = lang === "es";
+
+const t = isEs
+  ? {
+      title: "Crece 10X más rápido, mejor, más inteligente.",
+      intro:
+        "Olvídate de las adivinanzas, el método de ensayo y error y el caos interminable de intentar resolverlo todo solo — por primera vez. En su lugar, haz crecer tu negocio con <u>embudos probados para conseguir clientes</u>, frameworks y <strong>adquisición científica de clientes</strong> (no con esperanzas y oraciones).",
+      stat1Label: "Facturación generada",
+      stat1Body:
+        "Dejamos que los números hablen. $7.8 mil millones en facturación reportada por clientes y contando.",
+      stat2Label: "Tamaño de nuestra plataforma",
+      stat2Body:
+        "200,000 clientes y contando componen nuestra plataforma diversa y en constante crecimiento.",
+      stat3Label: "Nuestro alcance",
+      stat3Body: "Atendiendo a clientes en más de 136 países diferentes.",
+      stat4Label: "Probado en combate",
+      stat4Body:
+        "Nuestras estrategias han sido probadas en más de 1067 industrias y nichos diferentes.",
+    }
+  : {
+      title: "Cresça 10X mais rápido, melhor, mais inteligente.",
+      intro:
+        "Esqueça o achismo, a tentativa-e-erro e o caos sem fim de tentar descobrir tudo sozinho — pela primeira vez. Em vez disso, cresça seu negócio com <u>funis comprovados para conseguir clientes</u>, frameworks e <strong>aquisição científica de clientes</strong> (não com torcida e reza).",
+      stat1Label: "Faturamento gerado",
+      stat1Body:
+        "Deixamos os números falarem. $7.8 bilhões em faturamento reportado por clientes — e contando.",
+      stat2Label: "Tamanho da nossa plataforma",
+      stat2Body:
+        "200.000 clientes e contando compõem nossa plataforma diversa e em crescimento constante.",
+      stat3Label: "Nosso alcance",
+      stat3Body: "Atendendo clientes em mais de 136 países diferentes.",
+      stat4Label: "Testado no campo de batalha",
+      stat4Body:
+        "Nossas estratégias foram testadas em mais de 1067 indústrias e nichos diferentes.",
+    };
 ---
 
 <section class="bg-[#f0f9e5] text-zinc-950 py-24 md:py-32 relative overflow-hidden">
   <div class="container mx-auto px-4 max-w-[1200px] relative z-10 text-center">
     
     <h2 class="font-heading text-5xl md:text-7xl uppercase tracking-tight leading-none mb-8 max-w-[900px] mx-auto">
-      Grow 10X Faster, Better, Smarter.
+      {t.title}
     </h2>
     
-    <p class="text-xl md:text-2xl text-zinc-700 leading-relaxed max-w-[800px] mx-auto font-medium font-sans mb-16">
-      Skip the guesswork, trial-and-error and never-ending shit show of trying to figure everything out yourself – for the very first time. And instead, grow your business with proven <span class="underline underline-offset-4">client-getting-funnels</span>, frameworks and <strong>scientific customer acquisition</strong> (not hopes and prayers).
-    </p>
+    <p class="text-xl md:text-2xl text-zinc-700 leading-relaxed max-w-[800px] mx-auto font-medium font-sans mb-16" set:html={t.intro}></p>
 
     <div class="relative w-full max-w-[1000px] mx-auto mt-20">
       
-      <!-- Globe Wrapper Placeholder -->
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] w-full max-w-[800px] aspect-square bg-[radial-gradient(circle_at_center,rgba(208,242,36,0.1)_0%,transparent_70%)] rounded-full -z-10 pointer-events-none">
-        <!-- In a full implementation, a WebGL Globe script would inject here -->
-      </div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] w-full max-w-[800px] aspect-square bg-[radial-gradient(circle_at_center,rgba(208,242,36,0.1)_0%,transparent_70%)] rounded-full -z-10 pointer-events-none"></div>
 
-      <!-- Stats Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-32 md:mt-48 lg:mt-64 relative z-10">
         
-        <!-- Stat 1 -->
         <div class="bg-white/80 backdrop-blur-md border border-white/50 p-8 rounded-2xl shadow-xl flex flex-col items-center justify-center transition-transform hover:-translate-y-2 duration-300">
-          <p class="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-2">Revenue Generated</p>
+          <p class="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-2">{t.stat1Label}</p>
           <div class="text-5xl md:text-6xl font-heading text-zinc-950 mb-4">$7.8<span class="text-4xl text-primary ml-1">B</span></div>
-          <p class="text-zinc-600 text-sm leading-relaxed font-sans font-medium">We let our numbers do the talking. $7.8 Billion in reported client revenue and counting.</p>
+          <p class="text-zinc-600 text-sm leading-relaxed font-sans font-medium">{t.stat1Body}</p>
         </div>
 
-        <!-- Stat 2 -->
         <div class="bg-white/80 backdrop-blur-md border border-white/50 p-8 rounded-2xl shadow-xl flex flex-col items-center justify-center transition-transform hover:-translate-y-2 duration-300">
-          <p class="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-2">Size Of Our Platform</p>
+          <p class="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-2">{t.stat2Label}</p>
           <div class="text-5xl md:text-6xl font-heading text-zinc-950 mb-4">200<span class="text-4xl text-primary ml-1">K</span></div>
-          <p class="text-zinc-600 text-sm leading-relaxed font-sans font-medium">200,000 customers and counting make up our diverse and ever growing platform.</p>
+          <p class="text-zinc-600 text-sm leading-relaxed font-sans font-medium">{t.stat2Body}</p>
         </div>
 
-        <!-- Stat 3 -->
         <div class="bg-white/80 backdrop-blur-md border border-white/50 p-8 rounded-2xl shadow-xl flex flex-col items-center justify-center transition-transform hover:-translate-y-2 duration-300">
-          <p class="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-2">Our Reach</p>
+          <p class="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-2">{t.stat3Label}</p>
           <div class="text-5xl md:text-6xl font-heading text-zinc-950 mb-4">136</div>
-          <p class="text-zinc-600 text-sm leading-relaxed font-sans font-medium">Serving customers in over 136 different countries.</p>
+          <p class="text-zinc-600 text-sm leading-relaxed font-sans font-medium">{t.stat3Body}</p>
         </div>
 
-        <!-- Stat 4 -->
         <div class="bg-white/80 backdrop-blur-md border border-white/50 p-8 rounded-2xl shadow-xl flex flex-col items-center justify-center transition-transform hover:-translate-y-2 duration-300">
-          <p class="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-2">Battle Tested</p>
+          <p class="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-2">{t.stat4Label}</p>
           <div class="text-5xl md:text-6xl font-heading text-zinc-950 mb-4">1067</div>
-          <p class="text-zinc-600 text-sm leading-relaxed font-sans font-medium">Our strategies have been battle tested in over 1067 different industries and niches.</p>
+          <p class="text-zinc-600 text-sm leading-relaxed font-sans font-medium">{t.stat4Body}</p>
         </div>
 
       </div>

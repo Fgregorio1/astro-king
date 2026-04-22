@@ -1,11 +1,51 @@
 ---
+interface Props {
+  lang?: "pt" | "es";
+}
+
+const { lang = "pt" } = Astro.props;
+const isEs = lang === "es";
+
+const t = isEs
+  ? {
+      pill: "Lo que ofrecemos",
+      agencyKicker: "Contrátanos para hacerlo por ti",
+      agencyTitle: "Agencia",
+      agencyBody:
+        "Servicios de marketing digital gestionados y 'hechos para ti' para empresas medianas y grandes que buscan acelerar su 'hiper-crecimiento'. Y sí, garantizamos resultados y olemos increíble *guiño*.",
+      coursesKicker: "Aprende a hacerlo tú mismo",
+      coursesTitle: "Cursos",
+      coursesBody:
+        "Programas de capacitación en crecimiento empresarial para compañías que quieren escalar su negocio de coaching, consultoría o servicios a siete y ocho cifras RÁPIDO (en meses, no años).",
+      cta: "Empezar",
+    }
+  : {
+      pill: "Nossa oferta",
+      agencyKicker: "Contrate-nos para fazer por você",
+      agencyTitle: "Agência",
+      agencyBody:
+        "Serviços de marketing digital gerenciados e 'feitos para você' para empresas de médio a grande porte que querem acelerar o 'hiper-crescimento'. E sim, garantimos resultados e cheiramos maravilhosamente *pisca*.",
+      coursesKicker: "Aprenda a fazer você mesmo",
+      coursesTitle: "Cursos",
+      coursesBody:
+        "Programas de treinamento em crescimento empresarial para empresas sérias sobre escalar seu negócio de coaching, consultoria ou serviços para sete e oito dígitos RÁPIDO (em meses, não anos).",
+      cta: "Começar",
+    };
+
+// Inline markdown-ish renderer: *italic* → HTML.
+function renderInline(s: string): string {
+  return s
+    .replace(/\\\*/g, "&#42;")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/&#42;/g, "*");
+}
 ---
 
 <section class="bg-[#373737] text-white py-24 md:py-32 relative overflow-hidden">
   <div class="container mx-auto px-4 max-w-[1200px] relative z-10">
     <div class="text-center mb-16">
       <span class="inline-block px-4 py-1 border border-zinc-500 rounded-full text-xs font-bold uppercase tracking-[0.2em] mb-4 text-zinc-300">
-        Our Offering
+        {t.pill}
       </span>
     </div>
 
@@ -13,49 +53,55 @@
       
       <!-- Agency Box -->
       <div class="flex-1 bg-gradient-to-b from-[#222] to-[#111] p-10 md:p-14 rounded-3xl flex flex-col items-center justify-center text-center shadow-2xl relative group overflow-hidden border border-zinc-800 transition-transform duration-500 hover:-translate-y-2">
-        <div class="w-24 h-24 bg-black rounded-full flex items-center justify-center mb-8 relative z-10 shadow-[0_0_30px_rgba(168,213,7,0.2)]">
-          <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 249.8 280.5">
-            <linearGradient id="latinuspro-logomark" gradientTransform="matrix(1 0 0 -1 0 282)" gradientUnits="userSpaceOnUse" x1="74.89" x2="249.82" y1="141.745" y2="141.745">
-              <stop offset="0" stop-color="#8bb600"></stop>
-              <stop offset=".04" stop-color="#91c100"></stop>
-              <stop offset=".12" stop-color="#9ed600"></stop>
-              <stop offset=".17" stop-color="#a2de00"></stop>
-            </linearGradient>
-            <path d="m0 0h74.9v280.4h-74.9z" fill="#a2de00"></path>
-            <path d="m74.9 195.9 77.6 84.6h97.3l-116.2-122.9c.4 0 111-157.6 111-157.6h-83.3l-86.4 127.9z" fill="url(#latinuspro-logomark)"></path>
+        <div class="mb-8 relative z-10 flex items-center justify-center h-24 md:h-28">
+          <svg
+            class="h-full w-auto text-primary drop-shadow-[0_0_30px_rgba(208,242,36,0.35)]"
+            viewBox="0 17 1280 1543"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-label="Latinuspro"
+            role="img"
+          >
+            <path d="M647 701.03H862V1029.14H313V17H647V701.03Z"></path>
+            <path d="M862 369H1220V701H862V369Z"></path>
+            <path d="M84.232 1349.7H188.632V1377H51.832V1179H84.232V1349.7ZM385.463 1377H351.262L333.263 1324.8H253.763L235.463 1377H202.163L274.463 1179H313.463L385.463 1377ZM262.163 1299H324.863L293.663 1206.3L262.163 1299ZM535.669 1179V1206.3H469.969V1377H437.269V1206.3H371.869V1179H535.669ZM604.838 1179V1377H572.438V1179H604.838ZM820.193 1179V1377H782.393L707.693 1250.1L690.593 1217.4H690.293L691.193 1248.9V1377H661.793V1179H699.293L773.993 1305.9L791.393 1338.6H791.693L790.493 1307.1V1179H820.193Z"></path>
+            <path d="M1031.03 1179V1300.8C1031.03 1327.2 1024.23 1347 1010.63 1360.2C997.225 1373.4 977.725 1380 952.125 1380C926.725 1380 907.225 1373.4 893.625 1360.2C880.025 1347 873.225 1327.2 873.225 1300.8V1179H905.925V1298.1C905.925 1315.1 909.425 1328.4 916.425 1338C923.425 1347.6 935.325 1352.4 952.125 1352.4C968.725 1352.4 980.625 1347.6 987.825 1338C995.025 1328.4 998.625 1315.1 998.625 1298.1V1179H1031.03ZM1149.95 1176C1167.35 1176 1182.35 1179.3 1194.95 1185.9C1207.75 1192.3 1218.55 1202.1 1227.35 1215.3L1206.95 1236.3C1199.75 1224.7 1191.35 1216.3 1181.75 1211.1C1172.35 1205.9 1161.25 1203.3 1148.45 1203.3C1139.25 1203.3 1131.65 1204.6 1125.65 1207.2C1119.85 1209.8 1115.45 1213.3 1112.45 1217.7C1109.65 1222.1 1108.25 1227 1108.25 1232.4C1108.25 1239 1110.45 1244.6 1114.85 1249.2C1119.45 1253.6 1127.35 1257.1 1138.55 1259.7L1175.75 1268.4C1194.35 1272.6 1207.65 1279 1215.65 1287.6C1223.65 1296 1227.65 1306.9 1227.65 1320.3C1227.65 1332.5 1224.45 1343.1 1218.05 1352.1C1211.65 1361.1 1202.65 1368 1191.05 1372.8C1179.65 1377.6 1166.45 1380 1151.45 1380C1138.05 1380 1125.75 1378.3 1114.55 1374.9C1103.55 1371.3 1093.95 1366.4 1085.75 1360.2C1077.75 1353.8 1071.05 1346.6 1065.65 1338.6L1086.35 1316.1C1090.35 1323.3 1095.55 1329.7 1101.95 1335.3C1108.35 1340.7 1115.75 1345 1124.15 1348.2C1132.75 1351.2 1141.95 1352.7 1151.75 1352.7C1160.55 1352.7 1168.05 1351.6 1174.25 1349.4C1180.65 1347.2 1185.55 1343.9 1188.95 1339.5C1192.35 1335.1 1194.05 1329.9 1194.05 1323.9C1194.05 1317.9 1192.05 1312.7 1188.05 1308.3C1184.25 1303.9 1177.15 1300.5 1166.75 1298.1L1126.25 1288.8C1115.25 1286.2 1105.85 1282.6 1098.05 1278C1090.25 1273.4 1084.35 1267.7 1080.35 1260.9C1076.35 1253.9 1074.35 1245.8 1074.35 1236.6C1074.35 1225.2 1077.35 1215 1083.35 1206C1089.55 1196.8 1098.25 1189.5 1109.45 1184.1C1120.85 1178.7 1134.35 1176 1149.95 1176Z"></path>
+            <path d="M534.655 1460C545.655 1460 554.355 1462.85 560.755 1468.55C567.155 1474.15 570.355 1481.95 570.355 1491.95C570.355 1502.05 567.155 1509.9 560.755 1515.5C554.355 1521.1 545.655 1523.9 534.655 1523.9H514.705V1559H493.855V1460H534.655ZM531.505 1507.55C537.405 1507.55 541.805 1506.25 544.705 1503.65C547.605 1501.05 549.055 1497.15 549.055 1491.95C549.055 1486.75 547.605 1482.85 544.705 1480.25C541.805 1477.65 537.405 1476.35 531.505 1476.35H514.705V1507.55H531.505ZM631.827 1460C642.727 1460 651.277 1462.7 657.477 1468.1C663.777 1473.4 666.927 1480.65 666.927 1489.85C666.927 1496.25 665.527 1501.7 662.727 1506.2C659.927 1510.6 655.877 1513.95 650.577 1516.25C645.377 1518.55 639.127 1519.85 631.827 1520.15L629.877 1521.05H609.327V1559H588.777V1460H631.827ZM629.277 1505.45C634.477 1505.45 638.477 1504.35 641.277 1502.15C644.177 1499.85 645.627 1496.1 645.627 1490.9C645.627 1485.6 644.127 1481.85 641.127 1479.65C638.227 1477.45 634.277 1476.35 629.277 1476.35H609.327V1505.45H629.277ZM641.577 1509.8L672.477 1559H649.077L623.727 1515.5L641.577 1509.8ZM729.504 1458.5C739.104 1458.5 747.354 1460.55 754.254 1464.65C761.254 1468.75 766.604 1474.6 770.304 1482.2C774.104 1489.8 776.004 1498.9 776.004 1509.5C776.004 1520.1 774.104 1529.2 770.304 1536.8C766.604 1544.4 761.254 1550.25 754.254 1554.35C747.354 1558.45 739.104 1560.5 729.504 1560.5C719.904 1560.5 711.604 1558.45 704.604 1554.35C697.704 1550.25 692.354 1544.4 688.554 1536.8C684.754 1529.2 682.854 1520.1 682.854 1509.5C682.854 1498.9 684.754 1489.8 688.554 1482.2C692.354 1474.6 697.704 1468.75 704.604 1464.65C711.604 1460.55 719.904 1458.5 729.504 1458.5ZM729.504 1475.45C724.204 1475.45 719.654 1476.75 715.854 1479.35C712.154 1481.95 709.304 1485.8 707.304 1490.9C705.304 1495.9 704.304 1502.1 704.304 1509.5C704.304 1516.8 705.304 1523 707.304 1528.1C709.304 1533.2 712.154 1537.05 715.854 1539.65C719.654 1542.25 724.204 1543.55 729.504 1543.55C734.804 1543.55 739.304 1542.25 743.004 1539.65C746.704 1537.05 749.554 1533.2 751.554 1528.1C753.554 1523 754.554 1516.8 754.554 1509.5C754.554 1502.1 753.554 1495.9 751.554 1490.9C749.554 1485.8 746.704 1481.95 743.004 1479.35C739.304 1476.75 734.804 1475.45 729.504 1475.45Z"></path>
           </svg>
         </div>
-        <p class="text-primary font-bold text-sm tracking-widest uppercase mb-4 relative z-10">Hire us to do it for you</p>
-        <h2 class="font-heading text-6xl md:text-[5rem] leading-none tracking-tight uppercase mb-6 relative z-10">Agency</h2>
-        <p class="text-zinc-400 mb-10 max-w-[350px] mx-auto text-lg leading-relaxed relative z-10">
-          Managed and 'done-for-you' digital marketing services for mid-to-large companies looking to accelerate 'hyper-growth'. And yes, we guarantee results and smell fantastic *wink*.
-        </p>
-        <a href="#" class="inline-block bg-primary hover:bg-[#c6e522] text-zinc-950 font-black text-lg uppercase tracking-widest px-10 py-[18px] rounded-full transition-all shadow-[0_0_15px_rgba(208,242,36,0.2)] relative z-10">
-          Get Started
+        <p class="text-primary font-bold text-sm tracking-widest uppercase mb-4 relative z-10">{t.agencyKicker}</p>
+        <h2 class="font-heading text-6xl md:text-[5rem] leading-none tracking-tight uppercase mb-6 relative z-10">{t.agencyTitle}</h2>
+        <p class="text-zinc-400 mb-10 max-w-[350px] mx-auto text-lg leading-relaxed relative z-10" set:html={renderInline(t.agencyBody)}></p>
+        <a href="#" class="inline-flex items-center justify-center bg-[#FF5E00] hover:bg-[#ff7322] text-white font-black text-lg uppercase tracking-widest px-10 py-[18px] rounded-full transition-all shadow-[0_0_15px_rgba(255,94,0,0.35)] relative z-10 overflow-hidden group/btn">
+          <span class="absolute inset-0 w-full h-full -translate-x-[150%] skew-x-[-25deg] bg-gradient-to-r from-transparent via-white/70 to-transparent group-hover/btn:animate-[shine_0.5s_ease-in-out] pointer-events-none"></span>
+          <span class="relative z-10">{t.cta}</span>
         </a>
       </div>
 
       <!-- Courses Box -->
       <div class="flex-1 bg-gradient-to-b from-[#222] to-[#111] p-10 md:p-14 rounded-3xl flex flex-col items-center justify-center text-center shadow-2xl relative group overflow-hidden border border-zinc-800 transition-transform duration-500 hover:-translate-y-2">
-        <div class="w-24 h-24 bg-black rounded-full flex items-center justify-center mb-8 relative z-10 shadow-[0_0_30px_rgba(111,74,189,0.2)]">
-          <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 249.8 280.5">
-            <linearGradient id="latinuspro-logomark-purple" gradientUnits="userSpaceOnUse" x1="74.89" x2="249.82" y1="140.255" y2="140.255">
-              <stop offset="0" stop-color="#5e35ab"></stop>
-              <stop offset=".175" stop-color="#6841b5"></stop>
-              <stop offset=".419" stop-color="#6d48bb"></stop>
-              <stop offset="1" stop-color="#6f4abd"></stop>
-            </linearGradient>
-            <path d="m0 0h74.9v280.4h-74.9z" fill="#6f4abd"></path>
-            <path d="m74.9 195.9 77.6 84.6h97.3l-116.2-122.9c.4 0 111-157.6 111-157.6h-83.3l-86.4 127.9z" fill="url(#latinuspro-logomark-purple)"></path>
+        <div class="mb-8 relative z-10 flex items-center justify-center h-24 md:h-28">
+          <svg
+            class="h-full w-auto text-[#FF5E00] drop-shadow-[0_0_30px_rgba(255,94,0,0.35)]"
+            viewBox="0 17 1280 1543"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-label="Latinuspro"
+            role="img"
+          >
+            <path d="M647 701.03H862V1029.14H313V17H647V701.03Z"></path>
+            <path d="M862 369H1220V701H862V369Z"></path>
+            <path d="M84.232 1349.7H188.632V1377H51.832V1179H84.232V1349.7ZM385.463 1377H351.262L333.263 1324.8H253.763L235.463 1377H202.163L274.463 1179H313.463L385.463 1377ZM262.163 1299H324.863L293.663 1206.3L262.163 1299ZM535.669 1179V1206.3H469.969V1377H437.269V1206.3H371.869V1179H535.669ZM604.838 1179V1377H572.438V1179H604.838ZM820.193 1179V1377H782.393L707.693 1250.1L690.593 1217.4H690.293L691.193 1248.9V1377H661.793V1179H699.293L773.993 1305.9L791.393 1338.6H791.693L790.493 1307.1V1179H820.193Z"></path>
+            <path d="M1031.03 1179V1300.8C1031.03 1327.2 1024.23 1347 1010.63 1360.2C997.225 1373.4 977.725 1380 952.125 1380C926.725 1380 907.225 1373.4 893.625 1360.2C880.025 1347 873.225 1327.2 873.225 1300.8V1179H905.925V1298.1C905.925 1315.1 909.425 1328.4 916.425 1338C923.425 1347.6 935.325 1352.4 952.125 1352.4C968.725 1352.4 980.625 1347.6 987.825 1338C995.025 1328.4 998.625 1315.1 998.625 1298.1V1179H1031.03ZM1149.95 1176C1167.35 1176 1182.35 1179.3 1194.95 1185.9C1207.75 1192.3 1218.55 1202.1 1227.35 1215.3L1206.95 1236.3C1199.75 1224.7 1191.35 1216.3 1181.75 1211.1C1172.35 1205.9 1161.25 1203.3 1148.45 1203.3C1139.25 1203.3 1131.65 1204.6 1125.65 1207.2C1119.85 1209.8 1115.45 1213.3 1112.45 1217.7C1109.65 1222.1 1108.25 1227 1108.25 1232.4C1108.25 1239 1110.45 1244.6 1114.85 1249.2C1119.45 1253.6 1127.35 1257.1 1138.55 1259.7L1175.75 1268.4C1194.35 1272.6 1207.65 1279 1215.65 1287.6C1223.65 1296 1227.65 1306.9 1227.65 1320.3C1227.65 1332.5 1224.45 1343.1 1218.05 1352.1C1211.65 1361.1 1202.65 1368 1191.05 1372.8C1179.65 1377.6 1166.45 1380 1151.45 1380C1138.05 1380 1125.75 1378.3 1114.55 1374.9C1103.55 1371.3 1093.95 1366.4 1085.75 1360.2C1077.75 1353.8 1071.05 1346.6 1065.65 1338.6L1086.35 1316.1C1090.35 1323.3 1095.55 1329.7 1101.95 1335.3C1108.35 1340.7 1115.75 1345 1124.15 1348.2C1132.75 1351.2 1141.95 1352.7 1151.75 1352.7C1160.55 1352.7 1168.05 1351.6 1174.25 1349.4C1180.65 1347.2 1185.55 1343.9 1188.95 1339.5C1192.35 1335.1 1194.05 1329.9 1194.05 1323.9C1194.05 1317.9 1192.05 1312.7 1188.05 1308.3C1184.25 1303.9 1177.15 1300.5 1166.75 1298.1L1126.25 1288.8C1115.25 1286.2 1105.85 1282.6 1098.05 1278C1090.25 1273.4 1084.35 1267.7 1080.35 1260.9C1076.35 1253.9 1074.35 1245.8 1074.35 1236.6C1074.35 1225.2 1077.35 1215 1083.35 1206C1089.55 1196.8 1098.25 1189.5 1109.45 1184.1C1120.85 1178.7 1134.35 1176 1149.95 1176Z"></path>
+            <path d="M534.655 1460C545.655 1460 554.355 1462.85 560.755 1468.55C567.155 1474.15 570.355 1481.95 570.355 1491.95C570.355 1502.05 567.155 1509.9 560.755 1515.5C554.355 1521.1 545.655 1523.9 534.655 1523.9H514.705V1559H493.855V1460H534.655ZM531.505 1507.55C537.405 1507.55 541.805 1506.25 544.705 1503.65C547.605 1501.05 549.055 1497.15 549.055 1491.95C549.055 1486.75 547.605 1482.85 544.705 1480.25C541.805 1477.65 537.405 1476.35 531.505 1476.35H514.705V1507.55H531.505ZM631.827 1460C642.727 1460 651.277 1462.7 657.477 1468.1C663.777 1473.4 666.927 1480.65 666.927 1489.85C666.927 1496.25 665.527 1501.7 662.727 1506.2C659.927 1510.6 655.877 1513.95 650.577 1516.25C645.377 1518.55 639.127 1519.85 631.827 1520.15L629.877 1521.05H609.327V1559H588.777V1460H631.827ZM629.277 1505.45C634.477 1505.45 638.477 1504.35 641.277 1502.15C644.177 1499.85 645.627 1496.1 645.627 1490.9C645.627 1485.6 644.127 1481.85 641.127 1479.65C638.227 1477.45 634.277 1476.35 629.277 1476.35H609.327V1505.45H629.277ZM641.577 1509.8L672.477 1559H649.077L623.727 1515.5L641.577 1509.8ZM729.504 1458.5C739.104 1458.5 747.354 1460.55 754.254 1464.65C761.254 1468.75 766.604 1474.6 770.304 1482.2C774.104 1489.8 776.004 1498.9 776.004 1509.5C776.004 1520.1 774.104 1529.2 770.304 1536.8C766.604 1544.4 761.254 1550.25 754.254 1554.35C747.354 1558.45 739.104 1560.5 729.504 1560.5C719.904 1560.5 711.604 1558.45 704.604 1554.35C697.704 1550.25 692.354 1544.4 688.554 1536.8C684.754 1529.2 682.854 1520.1 682.854 1509.5C682.854 1498.9 684.754 1489.8 688.554 1482.2C692.354 1474.6 697.704 1468.75 704.604 1464.65C711.604 1460.55 719.904 1458.5 729.504 1458.5ZM729.504 1475.45C724.204 1475.45 719.654 1476.75 715.854 1479.35C712.154 1481.95 709.304 1485.8 707.304 1490.9C705.304 1495.9 704.304 1502.1 704.304 1509.5C704.304 1516.8 705.304 1523 707.304 1528.1C709.304 1533.2 712.154 1537.05 715.854 1539.65C719.654 1542.25 724.204 1543.55 729.504 1543.55C734.804 1543.55 739.304 1542.25 743.004 1539.65C746.704 1537.05 749.554 1533.2 751.554 1528.1C753.554 1523 754.554 1516.8 754.554 1509.5C754.554 1502.1 753.554 1495.9 751.554 1490.9C749.554 1485.8 746.704 1481.95 743.004 1479.35C739.304 1476.75 734.804 1475.45 729.504 1475.45Z"></path>
           </svg>
         </div>
-        <p class="text-primary font-bold text-sm tracking-widest uppercase mb-4 relative z-10">Learn how to do it yourself</p>
-        <h2 class="font-heading text-6xl md:text-[5rem] leading-none tracking-tight uppercase mb-6 relative z-10">Courses</h2>
-        <p class="text-zinc-400 mb-10 max-w-[350px] mx-auto text-lg leading-relaxed relative z-10">
-          Business growth training programs for companies serious about scaling their coaching, consulting or service business to seven and eight figures FAST (in months, not years).
-        </p>
-        <a href="#" class="inline-block bg-primary hover:bg-[#c6e522] text-zinc-950 font-black text-lg uppercase tracking-widest px-10 py-[18px] rounded-full transition-all shadow-[0_0_15px_rgba(208,242,36,0.2)] relative z-10">
-          Get Started
+        <p class="text-primary font-bold text-sm tracking-widest uppercase mb-4 relative z-10">{t.coursesKicker}</p>
+        <h2 class="font-heading text-6xl md:text-[5rem] leading-none tracking-tight uppercase mb-6 relative z-10">{t.coursesTitle}</h2>
+        <p class="text-zinc-400 mb-10 max-w-[350px] mx-auto text-lg leading-relaxed relative z-10" set:html={renderInline(t.coursesBody)}></p>
+        <a href="#" class="inline-flex items-center justify-center bg-[#FF5E00] hover:bg-[#ff7322] text-white font-black text-lg uppercase tracking-widest px-10 py-[18px] rounded-full transition-all shadow-[0_0_15px_rgba(255,94,0,0.35)] relative z-10 overflow-hidden group/btn">
+          <span class="absolute inset-0 w-full h-full -translate-x-[150%] skew-x-[-25deg] bg-gradient-to-r from-transparent via-white/70 to-transparent group-hover/btn:animate-[shine_0.5s_ease-in-out] pointer-events-none"></span>
+          <span class="relative z-10">{t.cta}</span>
         </a>
       </div>
 

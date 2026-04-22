@@ -1,14 +1,30 @@
 ---
+interface Props {
+  lang?: "pt" | "es";
+}
+
+const { lang = "pt" } = Astro.props;
+const isEs = lang === "es";
+
+const t = isEs
+  ? {
+      pill: "Casos de éxito",
+      title: "Conviértete en nuestra próxima historia de éxito",
+    }
+  : {
+      pill: "Cases de sucesso",
+      title: "Seja nosso próximo case de sucesso",
+    };
 ---
 
 <section class="bg-gradient-to-b from-[#111] to-black text-white py-24 md:py-32 relative overflow-hidden">
   <div class="container mx-auto px-4 max-w-[1400px] relative z-10">
     <div class="text-center mb-16">
       <span class="inline-block bg-zinc-800 text-primary px-6 py-2 rounded-full text-xs font-bold uppercase tracking-[0.2em] mb-6 shadow-[0_0_15px_rgba(208,242,36,0.15)]">
-        Case Studies
+        {t.pill}
       </span>
       <h2 class="font-heading text-5xl md:text-7xl uppercase tracking-tight leading-none mb-12">
-        Become our next success story
+        {t.title}
       </h2>
     </div>
 
