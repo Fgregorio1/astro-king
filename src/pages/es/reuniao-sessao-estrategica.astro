@@ -8,6 +8,6 @@ const rawCountry = Astro.request.headers.get('CF-IPCountry') ?? '';
 const country = /^[A-Za-z]{2}$/.test(rawCountry) ? rawCountry.toUpperCase() : 'US';
 ---
 
-<Layout title="Sesión Estratégica - King Kong" lang="es">
+<Layout title="Sesión Estratégica - Latinuspro" lang="es">
   <StrategySessionFunnel client:load lang="es" country={country} />
 </Layout>

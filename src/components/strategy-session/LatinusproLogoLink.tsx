@@ -3,14 +3,16 @@ import { cn } from "@/lib/utils";
 type Props = {
   className?: string;
   href?: string;
+  lang?: "pt" | "es";
 };
 
-export function KingKongLogoLink({ className, href = "/" }: Props) {
+export function LatinusproLogoLink({ className, href = "/", lang = "pt" }: Props) {
+  const ariaLabel = lang === "es" ? "Latinuspro — inicio" : "Latinuspro — início";
   return (
     <a
       href={href}
       className={cn("block shrink-0", className)}
-      aria-label="King Kong — início"
+      aria-label={ariaLabel}
     >
       <svg
         className="h-auto w-full"

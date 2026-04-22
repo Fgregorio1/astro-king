@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { getTracking } from "@/lib/tracking";
 import { scoreQuiz, tierFromScore } from "@/lib/quiz-scoring";
 
-import { KingKongLogoLink } from "./KingKongLogoLink";
+import { LatinusproLogoLink } from "./LatinusproLogoLink";
 
 /** One horizontal system for nav, progress, and every step */
 const SHELL_X = "mx-auto w-full max-w-3xl px-4 sm:px-5";
@@ -647,7 +647,7 @@ export default function StrategySessionFunnel({
             "flex justify-center py-4 sm:py-5",
           )}
         >
-          <KingKongLogoLink className="w-[8rem] md:w-[10rem]" />
+          <LatinusproLogoLink className="w-[8rem] md:w-[10rem]" lang={lang} />
         </div>
       </nav>
 
