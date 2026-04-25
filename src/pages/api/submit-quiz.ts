@@ -228,6 +228,25 @@ export const POST: APIRoute = async ({ request }) => {
   addCF(customFields, GHL_FIELD_IDS.ip_address, ip_address);
   addCF(customFields, GHL_FIELD_IDS.user_agent, user_agent);
 
+  if (debug) {
+    const trackedDebug = {
+      payload_has_lead_id: isNonEmpty(payload.lead_id),
+      payload_has_event_id: isNonEmpty(payload.event_id),
+      payload_has_gclid: isNonEmpty(payload.gclid),
+      mapped_field_ids: {
+        lead_id: GHL_FIELD_IDS.lead_id,
+        event_id: GHL_FIELD_IDS.event_id,
+        gclid_id: GHL_FIELD_IDS.gclid_id,
+      },
+      mapped_values_preview: {
+        lead_id: isNonEmpty(payload.lead_id) ? payload.lead_id.slice(0, 24) : null,
+        event_id: isNonEmpty(payload.event_id) ? payload.event_id.slice(0, 24) : null,
+        gclid_id: isNonEmpty(payload.gclid) ? payload.gclid.slice(0, 24) : null,
+      },
+    };
+    console.log("[submit-quiz] tracking ids debug:", JSON.stringify(trackedDebug));
+  }
+
   // ── Standard fields ─────────────────────────────────────────────────────
   // gclid isn't a custom field, but we can carry it in the contact `source`
   // string so it's visible on the record. We also write a human-friendly
