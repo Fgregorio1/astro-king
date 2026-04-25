@@ -84,6 +84,20 @@ interface CustomFieldEntry {
   value: string | string[];
 }
 
+type TrackingFieldIds = {
+  lead_id?: string;
+  event_id?: string;
+  gclid_id?: string;
+};
+
+type FieldResolverCache = {
+  key: string;
+  expiresAt: number;
+  ids: TrackingFieldIds;
+};
+
+let trackingFieldCache: FieldResolverCache | null = null;
+
 function json(body: ApiResponse, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
@@ -149,6 +163,84 @@ function csvToArray(csv: string | undefined): string[] {
     .filter((s) => s.length > 0);
 }
 
+async function resolveTrackingFieldIds(input: {
+  locationId: string;
+  apiKey: string;
+  debug: boolean;
+}): Promise<TrackingFieldIds> {
+  const cacheKey = `${input.locationId}:${GHL_API_VERSION}`;
+  if (
+    trackingFieldCache &&
+    trackingFieldCache.key === cacheKey &&
+    trackingFieldCache.expiresAt > Date.now()
+  ) {
+    return trackingFieldCache.ids;
+  }
+
+  const endpoint = `https://services.leadconnectorhq.com/locations/${encodeURIComponent(
+    input.locationId,
+  )}/customFields?model=contact`;
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${input.apiKey}`,
+        Version: GHL_API_VERSION,
+        Accept: "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      if (input.debug) {
+        const msg = await res.text().catch(() => "");
+        console.warn(
+          `[submit-quiz] customFields lookup failed status=${res.status} body=${msg.slice(0, 300)}`,
+        );
+      }
+      return {};
+    }
+
+    const data = (await res.json()) as unknown;
+    const maybeObj = data && typeof data === "object" ? (data as Record<string, unknown>) : {};
+    const rawList = Array.isArray(maybeObj.customFields)
+      ? maybeObj.customFields
+      : Array.isArray(maybeObj.fields)
+        ? maybeObj.fields
+        : [];
+
+    const out: TrackingFieldIds = {};
+
+    for (const item of rawList) {
+      if (!item || typeof item !== "object") continue;
+      const row = item as Record<string, unknown>;
+      const id = typeof row.id === "string" ? row.id : undefined;
+      const fieldKey = typeof row.fieldKey === "string" ? row.fieldKey : undefined;
+      if (!id || !fieldKey) continue;
+      if (fieldKey === "lead_id") out.lead_id = id;
+      if (fieldKey === "event_id") out.event_id = id;
+      if (fieldKey === "gclid_id") out.gclid_id = id;
+    }
+
+    trackingFieldCache = {
+      key: cacheKey,
+      expiresAt: Date.now() + 10 * 60 * 1000,
+      ids: out,
+    };
+
+    if (input.debug) {
+      console.log("[submit-quiz] resolved tracking field IDs:", JSON.stringify(out));
+    }
+
+    return out;
+  } catch (err) {
+    if (input.debug) {
+      console.warn("[submit-quiz] customFields lookup exception:", err);
+    }
+    return {};
+  }
+}
+
 export const POST: APIRoute = async ({ request }) => {
   const env = readEnv();
   const debug =
@@ -180,6 +272,11 @@ export const POST: APIRoute = async ({ request }) => {
 
   const ip_address = request.headers.get("CF-Connecting-IP") ?? "";
   const user_agent = request.headers.get("User-Agent") ?? "";
+  const resolvedTrackingIds = await resolveTrackingFieldIds({
+    locationId: env.GHL_LOCATION_ID,
+    apiKey: env.GHL_API_KEY,
+    debug,
+  });
 
   // ── Custom fields ───────────────────────────────────────────────────────
   const customFields: CustomFieldEntry[] = [];
@@ -215,9 +312,21 @@ export const POST: APIRoute = async ({ request }) => {
   addCF(customFields, GHL_FIELD_IDS.utm_content, payload.utm_content);
   addCF(customFields, GHL_FIELD_IDS.utm_term, payload.utm_term);
   addCF(customFields, GHL_FIELD_IDS.utm_id, payload.utm_id);
-  addCF(customFields, GHL_FIELD_IDS.lead_id, payload.lead_id);
-  addCF(customFields, GHL_FIELD_IDS.event_id, payload.event_id);
-  addCF(customFields, GHL_FIELD_IDS.gclid_id, payload.gclid);
+  addCF(
+    customFields,
+    resolvedTrackingIds.lead_id ?? GHL_FIELD_IDS.lead_id,
+    payload.lead_id,
+  );
+  addCF(
+    customFields,
+    resolvedTrackingIds.event_id ?? GHL_FIELD_IDS.event_id,
+    payload.event_id,
+  );
+  addCF(
+    customFields,
+    resolvedTrackingIds.gclid_id ?? GHL_FIELD_IDS.gclid_id,
+    payload.gclid,
+  );
   addCF(customFields, GHL_FIELD_IDS.gbraid, payload.gbraid);
   addCF(customFields, GHL_FIELD_IDS.wbraid, payload.wbraid);
   addCF(customFields, GHL_FIELD_IDS.fbclid, payload.fbclid);
