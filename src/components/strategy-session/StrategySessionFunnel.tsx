@@ -38,33 +38,55 @@ function submitNativeGhlForm(input: {
   eventId: string;
   gclid?: string;
 }): void {
+  if (typeof document === "undefined") return;
   if (!input.locationId || !input.formId) return;
 
-  const params = new URLSearchParams();
-  params.set("location_id", input.locationId);
-  params.set("form_id", input.formId);
-  params.set("full_name", input.fullName);
-  params.set("email", input.email);
-  params.set("phone", input.phone);
-  if (input.company) params.set("company_name", input.company);
-  if (input.website) params.set("website", input.website);
+  const iframeName = "ghl-native-submit-target";
+  let iframe = document.getElementById(iframeName) as HTMLIFrameElement | null;
+  if (!iframe) {
+    iframe = document.createElement("iframe");
+    iframe.id = iframeName;
+    iframe.name = iframeName;
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+  }
 
-  params.set(GHL_FIELD_IDS.lead_id, input.leadId);
-  params.set(GHL_FIELD_IDS.event_id, input.eventId);
-  if (input.gclid) params.set(GHL_FIELD_IDS.gclid_id, input.gclid);
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = "https://backend.leadconnectorhq.com/forms/submit";
+  form.target = iframeName;
+  form.style.display = "none";
 
-  // Fire-and-forget native GHL form submit; API route upsert remains fallback.
-  void fetch("https://backend.leadconnectorhq.com/forms/submit", {
-    method: "POST",
-    mode: "no-cors",
-    keepalive: true,
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: params.toString(),
-  }).catch(() => {
-    /* ignore: v2 upsert path handles reliability */
-  });
+  const appendInput = (
+    name: string,
+    value: string | undefined,
+    id?: string,
+  ) => {
+    if (!value) return;
+    const el = document.createElement("input");
+    el.type = "hidden";
+    el.name = name;
+    el.value = value;
+    if (id) el.id = id;
+    form.appendChild(el);
+  };
+
+  appendInput("location_id", input.locationId);
+  appendInput("form_id", input.formId);
+  appendInput("full_name", input.fullName);
+  appendInput("email", input.email);
+  appendInput("phone", input.phone);
+  appendInput("company_name", input.company);
+  appendInput("website", input.website);
+
+  // IDs expected by GHL external tracking script.
+  appendInput(GHL_FIELD_IDS.lead_id, input.leadId, "track-lead-id");
+  appendInput(GHL_FIELD_IDS.event_id, input.eventId, "track-event-id");
+  appendInput(GHL_FIELD_IDS.gclid_id, input.gclid, "track-gclid-id");
+
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(() => form.remove(), 0);
 }
 
 /** One horizontal system for nav, progress, and every step */
