@@ -5,7 +5,6 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
 import { Button } from "@/components/ui/button";
-import { GHL_FIELD_IDS } from "@/lib/ghl-fields";
 import { cn } from "@/lib/utils";
 import { getTracking } from "@/lib/tracking";
 import { scoreQuiz, tierFromScore } from "@/lib/quiz-scoring";
@@ -24,69 +23,6 @@ function createLeadId(): string {
     globalThis.crypto?.randomUUID?.() ??
     `lead.${Date.now()}.${Math.random().toString(36).slice(2)}`
   );
-}
-
-function submitNativeGhlForm(input: {
-  locationId?: string;
-  formId?: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  company?: string;
-  website?: string;
-  leadId: string;
-  eventId: string;
-  gclid?: string;
-}): void {
-  if (typeof document === "undefined") return;
-  if (!input.locationId || !input.formId) return;
-
-  const iframeName = "ghl-native-submit-target";
-  let iframe = document.getElementById(iframeName) as HTMLIFrameElement | null;
-  if (!iframe) {
-    iframe = document.createElement("iframe");
-    iframe.id = iframeName;
-    iframe.name = iframeName;
-    iframe.style.display = "none";
-    document.body.appendChild(iframe);
-  }
-
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = "https://backend.leadconnectorhq.com/forms/submit";
-  form.target = iframeName;
-  form.style.display = "none";
-
-  const appendInput = (
-    name: string,
-    value: string | undefined,
-    id?: string,
-  ) => {
-    if (!value) return;
-    const el = document.createElement("input");
-    el.type = "hidden";
-    el.name = name;
-    el.value = value;
-    if (id) el.id = id;
-    form.appendChild(el);
-  };
-
-  appendInput("location_id", input.locationId);
-  appendInput("form_id", input.formId);
-  appendInput("full_name", input.fullName);
-  appendInput("email", input.email);
-  appendInput("phone", input.phone);
-  appendInput("company_name", input.company);
-  appendInput("website", input.website);
-
-  // IDs expected by GHL external tracking script.
-  appendInput(GHL_FIELD_IDS.lead_id, input.leadId, "track-lead-id");
-  appendInput(GHL_FIELD_IDS.event_id, input.eventId, "track-event-id");
-  appendInput(GHL_FIELD_IDS.gclid_id, input.gclid, "track-gclid-id");
-
-  document.body.appendChild(form);
-  form.submit();
-  setTimeout(() => form.remove(), 0);
 }
 
 /** One horizontal system for nav, progress, and every step */
@@ -178,13 +114,9 @@ const waysToGetClients = [
 export default function StrategySessionFunnel({
   lang = "pt",
   country,
-  ghlLocationId,
-  ghlFormId,
 }: {
   lang?: "pt" | "es";
   country?: string;
-  ghlLocationId?: string;
-  ghlFormId?: string;
 }) {
   const [step, setStep] = useState(0);
   const [selectedWays, setSelectedWays] = useState<string[]>([]);
@@ -502,19 +434,6 @@ export default function StrategySessionFunnel({
     const timeout = setTimeout(() => controller.abort(), 10000);
 
     try {
-      submitNativeGhlForm({
-        locationId: ghlLocationId,
-        formId: ghlFormId,
-        fullName: `${finalForm.firstName} ${finalForm.lastName}`.trim(),
-        email,
-        phone: finalForm.phone,
-        company: finalForm.companyName,
-        website: finalForm.website,
-        leadId,
-        eventId,
-        gclid: tracking.gclid,
-      });
-
       const res = await fetch("/api/submit-quiz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

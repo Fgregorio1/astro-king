@@ -1,25 +1,13 @@
 ---
-// eslint-disable-next-line import/no-unresolved
-import { env as cfEnv } from "cloudflare:workers";
 import Layout from '../../layouts/Layout.astro';
 import StrategySessionFunnel from '../../components/strategy-session/StrategySessionFunnel';
 
 export const prerender = false;
 
-const runtimeEnv = (cfEnv ?? {}) as Record<string, string | undefined>;
-const viteEnv = (import.meta.env ?? {}) as Record<string, string | undefined>;
 const rawCountry = Astro.request.headers.get('CF-IPCountry') ?? '';
 const country = /^[A-Za-z]{2}$/.test(rawCountry) ? rawCountry.toUpperCase() : 'US';
-const ghlLocationId = runtimeEnv.GHL_LOCATION_ID ?? viteEnv.GHL_LOCATION_ID ?? "";
-const ghlFormId = runtimeEnv.GHL_FORM_ID ?? viteEnv.GHL_FORM_ID ?? "";
 ---
 
 <Layout title="Sesión Estratégica - Latinuspro" lang="es">
-  <StrategySessionFunnel
-    client:load
-    lang="es"
-    country={country}
-    ghlLocationId={ghlLocationId}
-    ghlFormId={ghlFormId}
-  />
+  <StrategySessionFunnel client:load lang="es" country={country} />
 </Layout>
