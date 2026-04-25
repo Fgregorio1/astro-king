@@ -5,11 +5,67 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
 import { Button } from "@/components/ui/button";
+import { GHL_FIELD_IDS } from "@/lib/ghl-fields";
 import { cn } from "@/lib/utils";
 import { getTracking } from "@/lib/tracking";
 import { scoreQuiz, tierFromScore } from "@/lib/quiz-scoring";
 
 import { LatinusproLogoLink } from "./LatinusproLogoLink";
+
+function createEventId(): string {
+  return (
+    globalThis.crypto?.randomUUID?.() ??
+    `event.${Date.now()}.${Math.random().toString(36).slice(2)}`
+  );
+}
+
+function createLeadId(): string {
+  return (
+    globalThis.crypto?.randomUUID?.() ??
+    `lead.${Date.now()}.${Math.random().toString(36).slice(2)}`
+  );
+}
+
+function submitNativeGhlForm(input: {
+  locationId?: string;
+  formId?: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  company?: string;
+  website?: string;
+  leadId: string;
+  eventId: string;
+  gclid?: string;
+}): void {
+  if (!input.locationId || !input.formId) return;
+
+  const params = new URLSearchParams();
+  params.set("location_id", input.locationId);
+  params.set("form_id", input.formId);
+  params.set("full_name", input.fullName);
+  params.set("email", input.email);
+  params.set("phone", input.phone);
+  if (input.company) params.set("company_name", input.company);
+  if (input.website) params.set("website", input.website);
+
+  params.set(GHL_FIELD_IDS.lead_id, input.leadId);
+  params.set(GHL_FIELD_IDS.event_id, input.eventId);
+  if (input.gclid) params.set(GHL_FIELD_IDS.gclid_id, input.gclid);
+
+  // Fire-and-forget native GHL form submit; API route upsert remains fallback.
+  void fetch("https://backend.leadconnectorhq.com/forms/submit", {
+    method: "POST",
+    mode: "no-cors",
+    keepalive: true,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: params.toString(),
+  }).catch(() => {
+    /* ignore: v2 upsert path handles reliability */
+  });
+}
 
 /** One horizontal system for nav, progress, and every step */
 const SHELL_X = "mx-auto w-full max-w-3xl px-4 sm:px-5";
@@ -100,9 +156,13 @@ const waysToGetClients = [
 export default function StrategySessionFunnel({
   lang = "pt",
   country,
+  ghlLocationId,
+  ghlFormId,
 }: {
   lang?: "pt" | "es";
   country?: string;
+  ghlLocationId?: string;
+  ghlFormId?: string;
 }) {
   const [step, setStep] = useState(0);
   const [selectedWays, setSelectedWays] = useState<string[]>([]);
@@ -370,10 +430,14 @@ export default function StrategySessionFunnel({
       timeInBusiness,
     });
     const tier = tierFromScore(score);
+    const leadId = createLeadId();
+    const eventId = createEventId();
 
     const tracking = getTracking();
 
     const payload = {
+      lead_id: leadId,
+      event_id: eventId,
       full_name: `${finalForm.firstName} ${finalForm.lastName}`.trim(),
       email,
       phone: finalForm.phone,
@@ -416,6 +480,19 @@ export default function StrategySessionFunnel({
     const timeout = setTimeout(() => controller.abort(), 10000);
 
     try {
+      submitNativeGhlForm({
+        locationId: ghlLocationId,
+        formId: ghlFormId,
+        fullName: `${finalForm.firstName} ${finalForm.lastName}`.trim(),
+        email,
+        phone: finalForm.phone,
+        company: finalForm.companyName,
+        website: finalForm.website,
+        leadId,
+        eventId,
+        gclid: tracking.gclid,
+      });
+
       const res = await fetch("/api/submit-quiz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -428,6 +505,8 @@ export default function StrategySessionFunnel({
 
       if (data.success) {
         try {
+          sessionStorage.setItem("quiz_lead_id", leadId);
+          sessionStorage.setItem("quiz_event_id", eventId);
           sessionStorage.setItem("quiz_submitted", "1");
           sessionStorage.setItem("quiz_lead_tier", tier);
           sessionStorage.setItem("quiz_score", String(score));

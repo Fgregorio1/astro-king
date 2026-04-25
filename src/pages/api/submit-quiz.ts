@@ -37,6 +37,8 @@ const GHL_UPSERT_ENDPOINT = "https://services.leadconnectorhq.com/contacts/upser
 const GHL_API_VERSION = "2021-07-28";
 
 interface QuizPayload {
+  lead_id?: string;
+  event_id?: string;
   full_name: string;
   email: string;
   phone: string;
@@ -213,6 +215,9 @@ export const POST: APIRoute = async ({ request }) => {
   addCF(customFields, GHL_FIELD_IDS.utm_content, payload.utm_content);
   addCF(customFields, GHL_FIELD_IDS.utm_term, payload.utm_term);
   addCF(customFields, GHL_FIELD_IDS.utm_id, payload.utm_id);
+  addCF(customFields, GHL_FIELD_IDS.lead_id, payload.lead_id);
+  addCF(customFields, GHL_FIELD_IDS.event_id, payload.event_id);
+  addCF(customFields, GHL_FIELD_IDS.gclid_id, payload.gclid);
   addCF(customFields, GHL_FIELD_IDS.gbraid, payload.gbraid);
   addCF(customFields, GHL_FIELD_IDS.wbraid, payload.wbraid);
   addCF(customFields, GHL_FIELD_IDS.fbclid, payload.fbclid);
