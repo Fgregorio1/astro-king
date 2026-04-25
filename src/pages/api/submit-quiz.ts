@@ -217,9 +217,9 @@ async function resolveTrackingFieldIds(input: {
       const id = typeof row.id === "string" ? row.id : undefined;
       const fieldKey = typeof row.fieldKey === "string" ? row.fieldKey : undefined;
       if (!id || !fieldKey) continue;
-      if (fieldKey === "lead_id") out.lead_id = id;
-      if (fieldKey === "event_id") out.event_id = id;
-      if (fieldKey === "gclid_id") out.gclid_id = id;
+      if (fieldKey === "lead_id" || fieldKey === "track_lead_id") out.lead_id = id;
+      if (fieldKey === "event_id" || fieldKey === "track_event_id") out.event_id = id;
+      if (fieldKey === "gclid_id" || fieldKey === "track_gclid_id") out.gclid_id = id;
     }
 
     trackingFieldCache = {
@@ -314,17 +314,17 @@ export const POST: APIRoute = async ({ request }) => {
   addCF(customFields, GHL_FIELD_IDS.utm_id, payload.utm_id);
   addCF(
     customFields,
-    resolvedTrackingIds.lead_id ?? GHL_FIELD_IDS.lead_id,
+    resolvedTrackingIds.lead_id ?? GHL_FIELD_IDS.track_lead_id,
     payload.lead_id,
   );
   addCF(
     customFields,
-    resolvedTrackingIds.event_id ?? GHL_FIELD_IDS.event_id,
+    resolvedTrackingIds.event_id ?? GHL_FIELD_IDS.track_event_id,
     payload.event_id,
   );
   addCF(
     customFields,
-    resolvedTrackingIds.gclid_id ?? GHL_FIELD_IDS.gclid_id,
+    resolvedTrackingIds.gclid_id ?? GHL_FIELD_IDS.track_gclid_id,
     payload.gclid,
   );
   addCF(customFields, GHL_FIELD_IDS.gbraid, payload.gbraid);
@@ -343,9 +343,9 @@ export const POST: APIRoute = async ({ request }) => {
       payload_has_event_id: isNonEmpty(payload.event_id),
       payload_has_gclid: isNonEmpty(payload.gclid),
       mapped_field_ids: {
-        lead_id: GHL_FIELD_IDS.lead_id,
-        event_id: GHL_FIELD_IDS.event_id,
-        gclid_id: GHL_FIELD_IDS.gclid_id,
+        lead_id: GHL_FIELD_IDS.track_lead_id,
+        event_id: GHL_FIELD_IDS.track_event_id,
+        gclid_id: GHL_FIELD_IDS.track_gclid_id,
       },
       mapped_values_preview: {
         lead_id: isNonEmpty(payload.lead_id) ? payload.lead_id.slice(0, 24) : null,
