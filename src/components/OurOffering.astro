@@ -13,10 +13,6 @@ const t = isEs
       agencyTitle: "Agencia",
       agencyBody:
         "Servicios de marketing digital gestionados y 'hechos para ti' para empresas medianas y grandes que buscan acelerar su 'hiper-crecimiento'. Y sí, garantizamos resultados y olemos increíble *guiño*.",
-      coursesKicker: "Aprende a hacerlo tú mismo",
-      coursesTitle: "Cursos",
-      coursesBody:
-        "Programas de capacitación en crecimiento empresarial para compañías que quieren escalar su negocio de coaching, consultoría o servicios a siete y ocho cifras RÁPIDO (en meses, no años).",
       cta: "Empezar",
     }
   : {
@@ -25,10 +21,6 @@ const t = isEs
       agencyTitle: "Agência",
       agencyBody:
         "Serviços de marketing digital gerenciados e 'feitos para você' para empresas de médio a grande porte que querem acelerar o 'hiper-crescimento'. E sim, garantimos resultados e cheiramos maravilhosamente *pisca*.",
-      coursesKicker: "Aprenda a fazer você mesmo",
-      coursesTitle: "Cursos",
-      coursesBody:
-        "Programas de treinamento em crescimento empresarial para empresas sérias sobre escalar seu negócio de coaching, consultoria ou serviços para sete e oito dígitos RÁPIDO (em meses, não anos).",
       cta: "Começar",
     };
 
@@ -49,10 +41,10 @@ function renderInline(s: string): string {
       </span>
     </div>
 
-    <div class="flex flex-col md:flex-row gap-8">
-      
+    <div class="flex justify-center">
+
       <!-- Agency Box -->
-      <div class="flex-1 bg-gradient-to-b from-[#222] to-[#111] p-10 md:p-14 rounded-3xl flex flex-col items-center justify-center text-center shadow-2xl relative group overflow-hidden border border-zinc-800 transition-transform duration-500 hover:-translate-y-2">
+      <div class="w-full max-w-xl bg-gradient-to-b from-[#222] to-[#111] p-10 md:p-14 rounded-3xl flex flex-col items-center justify-center text-center shadow-2xl relative group overflow-hidden border border-zinc-800 transition-transform duration-500 hover:-translate-y-2">
         <div class="mb-8 relative z-10 flex flex-col items-center gap-2">
           <svg
             class="h-14 w-auto text-[#CFF127] drop-shadow-[0_0_30px_rgba(207,241,39,0.35)]"
@@ -75,36 +67,6 @@ function renderInline(s: string): string {
         <p class="text-white font-bold text-sm tracking-widest uppercase mb-4 relative z-10">{t.agencyKicker}</p>
         <h2 class="font-heading text-6xl md:text-[5rem] leading-none tracking-tight uppercase mb-6 relative z-10">{t.agencyTitle}</h2>
         <p class="text-zinc-400 mb-10 max-w-[350px] mx-auto text-lg leading-relaxed relative z-10" set:html={renderInline(t.agencyBody)}></p>
-        <a href="#" class="inline-flex items-center justify-center bg-[#FF5E00] hover:bg-[#ff7322] text-white font-black text-lg uppercase tracking-widest px-10 py-[18px] rounded-full transition-all shadow-[0_0_15px_rgba(255,94,0,0.35)] relative z-10 overflow-hidden group/btn">
-          <span class="absolute inset-0 w-full h-full -translate-x-[150%] skew-x-[-25deg] bg-gradient-to-r from-transparent via-white/70 to-transparent group-hover/btn:animate-[shine_0.5s_ease-in-out] pointer-events-none"></span>
-          <span class="relative z-10">{t.cta}</span>
-        </a>
-      </div>
-
-      <!-- Courses Box -->
-      <div class="flex-1 bg-gradient-to-b from-[#222] to-[#111] p-10 md:p-14 rounded-3xl flex flex-col items-center justify-center text-center shadow-2xl relative group overflow-hidden border border-zinc-800 transition-transform duration-500 hover:-translate-y-2">
-        <div class="mb-8 relative z-10 flex flex-col items-center gap-2">
-          <svg
-            class="h-14 w-auto text-[#FF5E00] drop-shadow-[0_0_30px_rgba(255,94,0,0.35)]"
-            viewBox="0 0 907 1012"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-label="Latinuspro mark"
-            role="img"
-          >
-            <path d="M334 684H549V1012H0V0H334V684Z"></path>
-            <path d="M549 352H907V684H549V352Z"></path>
-          </svg>
-          <div class="font-heading leading-none tracking-wide text-center">
-            <div class="text-lg md:text-xl">
-              <span class="text-white">LATIN</span><span class="text-[#FF5E00]">US</span>
-            </div>
-            <div class="text-[0.7rem] md:text-xs text-white mt-1">PRO</div>
-          </div>
-        </div>
-        <p class="text-white font-bold text-sm tracking-widest uppercase mb-4 relative z-10">{t.coursesKicker}</p>
-        <h2 class="font-heading text-6xl md:text-[5rem] leading-none tracking-tight uppercase mb-6 relative z-10">{t.coursesTitle}</h2>
-        <p class="text-zinc-400 mb-10 max-w-[350px] mx-auto text-lg leading-relaxed relative z-10" set:html={renderInline(t.coursesBody)}></p>
         <a href="#" class="inline-flex items-center justify-center bg-[#FF5E00] hover:bg-[#ff7322] text-white font-black text-lg uppercase tracking-widest px-10 py-[18px] rounded-full transition-all shadow-[0_0_15px_rgba(255,94,0,0.35)] relative z-10 overflow-hidden group/btn">
           <span class="absolute inset-0 w-full h-full -translate-x-[150%] skew-x-[-25deg] bg-gradient-to-r from-transparent via-white/70 to-transparent group-hover/btn:animate-[shine_0.5s_ease-in-out] pointer-events-none"></span>
           <span class="relative z-10">{t.cta}</span>
