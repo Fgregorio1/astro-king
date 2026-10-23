@@ -37,24 +37,31 @@ const STEP_MAIN_PY = "pt-8 pb-12 sm:pt-10 sm:pb-14";
 /** Consistent stack gap inside steps */
 const STEP_STACK_GAP = "gap-6 sm:gap-7";
 
-const DOT_COUNT = 12;
+// The quiz starts at step 3. The old name (1) and email (2) steps are gone:
+// the hero form captures both, and the final form asks for the email when
+// it is missing, because /api/submit-quiz requires it.
+const FIRST_QUIZ_STEP = 3;
+const LAST_STEP = 12;
+
+const DOT_COUNT = LAST_STEP - FIRST_QUIZ_STEP + 1;
 const DOT = "h-[14px] w-[14px] shrink-0 rounded-full sm:h-[16px] sm:w-[16px]";
 const LINE = "mx-[2px] h-[2px] min-w-[4px] flex-1 bg-[#D3D3D3] sm:mx-1";
 
 function ProgressStrip({ filled }: { filled: number }) {
-  const n = Math.max(0, Math.min(filled, DOT_COUNT));
+  const total = DOT_COUNT;
+  const n = Math.max(0, Math.min(filled, total));
   return (
     <div
       className="mx-auto flex w-full max-w-[min(100%,21rem)] items-center sm:max-w-[23rem]"
       data-filled={n}
       role="presentation"
     >
-      {Array.from({ length: DOT_COUNT }, (_, i) => (
+      {Array.from({ length: total }, (_, i) => (
         <div
           key={i}
           className={cn(
             "flex items-center",
-            i < DOT_COUNT - 1 ? "min-w-0 flex-1" : "",
+            i < total - 1 ? "min-w-0 flex-1" : "",
           )}
         >
           <span
@@ -64,7 +71,7 @@ function ProgressStrip({ filled }: { filled: number }) {
             )}
             aria-hidden={true}
           />
-          {i < DOT_COUNT - 1 ? (
+          {i < total - 1 ? (
             <span className={LINE} aria-hidden={true} />
           ) : null}
         </div>
@@ -124,6 +131,7 @@ export default function StrategySessionFunnel({
   const [finalForm, setFinalForm] = useState({
     firstName: "",
     lastName: "",
+    email: "",
     phone: "",
     companyName: "",
     website: ""
@@ -134,17 +142,25 @@ export default function StrategySessionFunnel({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const nameId = useId();
-
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const emailId = useId();
   const [emailError, setEmailError] = useState("");
 
   const websiteInputRef = useRef<HTMLInputElement>(null);
   const websiteId = useId();
 
   const isEs = lang === "es";
+
+  // Visitors from the hero form already have a valid email in storage.
+  // Everyone else types it on the final form.
+  const [hasEmail, setHasEmail] = useState(false);
+
+  useEffect(() => {
+    try {
+      const email = sessionStorage.getItem("quiz_email")?.trim() || "";
+      setHasEmail(z.string().email().safeParse(email).success);
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -173,23 +189,7 @@ export default function StrategySessionFunnel({
       }
     };
 
-    if (step === 1) {
-      const prefill = readStorage("quiz_firstName");
-      const el = nameInputRef.current;
-      if (el) {
-        if (prefill && !el.value) el.value = prefill;
-        el.focus();
-        if (prefill) el.select();
-      }
-    } else if (step === 2) {
-      const prefill = readStorage("quiz_email");
-      const el = emailInputRef.current;
-      if (el) {
-        if (prefill && !el.value) el.value = prefill;
-        el.focus();
-        if (prefill) el.select();
-      }
-    } else if (step === 7) {
+    if (step === 7) {
       websiteInputRef.current?.focus();
     } else if (step === 12) {
       setFinalForm(prev => ({
@@ -200,44 +200,10 @@ export default function StrategySessionFunnel({
     }
   }, [step]);
 
-  const filled = step;
+  const filled = Math.max(0, step - FIRST_QUIZ_STEP + 1);
 
   function goBack() {
-    setStep((s) => Math.max(0, s - 1));
-  }
-
-  function onNameSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const name = nameInputRef.current?.value.trim();
-    if (!name) return;
-    try {
-      sessionStorage.setItem("quiz_firstName", name);
-    } catch {
-      /* ignore */
-    }
-    setStep(2);
-  }
-
-  function onEmailSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setEmailError("");
-    const email = emailInputRef.current?.value.trim() || "";
-    
-    const emailSchema = z.string().email();
-
-    const result = emailSchema.safeParse(email);
-    if (!result.success) {
-      setEmailError(isEs ? "Por favor, introduce un correo electrónico válido." : "Por favor, insira um email válido.");
-      return;
-    }
-
-    try {
-      sessionStorage.setItem("quiz_email", email);
-    } catch {
-      /* ignore */
-    }
-    // Advance to next step (step 3) when ready
-    setStep(3);
+    setStep((s) => (s === FIRST_QUIZ_STEP ? 0 : Math.max(0, s - 1)));
   }
 
   function handleBusinessTypeSelect(type: string) {
@@ -299,10 +265,11 @@ export default function StrategySessionFunnel({
 
   function onWebsiteSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const website = websiteInputRef.current?.value.trim();
-    if (!website) return;
+    // Optional: an empty answer continues and clears any old value.
+    const website = websiteInputRef.current?.value.trim() || "";
     try {
-      sessionStorage.setItem("quiz_website", website);
+      if (website) sessionStorage.setItem("quiz_website", website);
+      else sessionStorage.removeItem("quiz_website");
     } catch {
       /* ignore */
     }
@@ -370,7 +337,20 @@ export default function StrategySessionFunnel({
     const revenue = read("quiz_revenue");
     const investmentReadiness = read("quiz_investmentReadiness");
     const pinkyPromise = read("quiz_pinkyPromise");
-    const email = read("quiz_email");
+
+    let email = read("quiz_email").trim();
+    if (!hasEmail) {
+      email = finalForm.email.trim();
+      if (!z.string().email().safeParse(email).success) {
+        setEmailError(isEs ? "Por favor, introduce un correo electrónico válido." : "Por favor, insira um email válido.");
+        return;
+      }
+      try {
+        sessionStorage.setItem("quiz_email", email);
+      } catch {
+        /* ignore */
+      }
+    }
 
     const waysCsv = selectedWays.join(",");
     const challengesCsv = selectedChallenges.join(",");
@@ -700,7 +680,7 @@ export default function StrategySessionFunnel({
               </p>
             </div>
 
-            <h1 className="font-heading text-[clamp(2.25rem,5.5vw,4rem)] font-black uppercase leading-[0.95] tracking-tight text-black">
+            <h1 className="font-heading text-[clamp(2.25rem,5.5vw,4rem)] font-black uppercase leading-[0.95] tracking-[0.015em] text-balance text-black">
               {isEs 
                 ? "SESIÓN DE MAPA DE CRECIMIENTO Y ESCALA DE 30 MINUTOS GRATIS"
                 : "SESSÃO DE MAPA DE CRECIMENTO E ESCALA DE 30 MINUTOS GRATUITA"}
@@ -708,8 +688,8 @@ export default function StrategySessionFunnel({
 
             <p className="max-w-[40rem] text-lg leading-relaxed text-[#888888] sm:text-xl">
               {isEs
-                ? "Reclama tu llamada 100% gratuita y sin compromiso de 30 minutos para el mapa de crecimiento y escala (valor de US$ 1.000). Esto es estrictamente para personas que tienen hambre de crecimiento. Si ese eres tú, ¡vamos a llevar tu negocio a la luna! 🚀 🌕"
-                : "Garanta sua chamada 100% gratuita e sem compromisso de 30 minutos para o mapa de crescimento e escala (valor de US$ 1.000). Isso é estritamente para quem tem fome de crescimento. Se é o seu caso, vamos levar o seu negócio à lua! 🚀 🌕"}
+                ? "Reclama tu llamada 100% gratuita y sin compromiso de 30 minutos para el mapa de crecimiento y escala. Esto es estrictamente para personas que tienen hambre de crecimiento. Si ese eres tú, ¡vamos a llevar tu negocio a la luna! 🚀 🌕"
+                : "Garanta sua chamada 100% gratuita e sem compromisso de 30 minutos para o mapa de crescimento e escala. Isso é estritamente para quem tem fome de crescimento. Se é o seu caso, vamos levar o seu negócio à lua! 🚀 🌕"}
             </p>
 
             <Button
@@ -718,7 +698,7 @@ export default function StrategySessionFunnel({
                 "group/funnel-cta relative h-auto gap-2 overflow-hidden rounded-lg border-0 bg-[#FF5E00] px-10 py-4 text-lg font-black uppercase tracking-widest text-white shadow-sm",
                 "hover:bg-[#e55500] md:gap-3 md:px-12 md:py-5 md:text-xl",
               )}
-              onClick={() => setStep(1)}
+              onClick={() => setStep(FIRST_QUIZ_STEP)}
             >
               <div className="pointer-events-none absolute inset-0 h-full w-full -translate-x-[150%] skew-x-[-25deg] bg-gradient-to-r from-transparent via-white/70 to-transparent group-hover/funnel-cta:animate-[shine_0.5s_ease-in-out]" />
               <span className="relative z-10 flex items-center gap-2 sm:gap-3">
@@ -738,156 +718,6 @@ export default function StrategySessionFunnel({
                 </svg>
               </span>
             </Button>
-
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex text-[#FFD700]">
-                {[0, 1, 2, 3, 4].map((k) => (
-                  <svg
-                    key={k}
-                    className="size-6 fill-current"
-                    viewBox="0 0 24 24"
-                    aria-hidden={true}
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
-                ))}
-              </div>
-              <p className="text-sm text-[#888888]">
-                <span className="font-bold text-black">4,8</span> {isEs ? "estrellas entre" : "estrelas entre"}{" "}
-                <span className="font-bold text-black">7.441</span>{" "}
-                {isEs ? "evaluaciones" : "avaliações"}
-              </p>
-            </div>
-          </div>
-        ) : null}
-
-        {step === 1 ? (
-          <div
-            className={cn(
-              "flex w-full max-w-md flex-col self-center",
-              STEP_STACK_GAP,
-            )}
-          >
-            <form
-              className={cn("flex flex-col", STEP_STACK_GAP)}
-              onSubmit={onNameSubmit}
-            >
-              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
-                {isEs
-                  ? "Muy bien, seremos rápidos y directos (promesa de dedito). Pero antes de empezar — no queremos ser maleducados… Entonces, ¿cuál es tu nombre?"
-                  : "Tudo bem, seremos rápidos e diretos (promesa de dedinho). Mas antes de começarmos — não queremos ser indelicados… Então, qual é o seu nome?"}
-              </h1>
-
-              <div className="flex flex-col gap-3">
-                <label className="sr-only" htmlFor={nameId}>
-                  {isEs ? "Tu primer nombre" : "Seu primeiro nome"}
-                </label>
-                <input
-                  ref={nameInputRef}
-                  id={nameId}
-                  name="firstName"
-                  type="text"
-                  autoComplete="given-name"
-                  maxLength={80}
-                  placeholder={isEs ? "Escribe tu primer nombre" : "Digite seu primeiro nome"}
-                  className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
-                />
-                <Button
-                  type="submit"
-                  formNoValidate
-                  className={cn(
-                    "group/quiz-cta h-auto w-full gap-2 rounded-lg border-0 bg-zinc-200 py-3.5 text-base font-semibold text-zinc-500 shadow-none",
-                    "hover:bg-zinc-300/80 hover:text-zinc-600 flex items-center justify-center",
-                  )}
-                >
-                  {isEs ? "Continuar" : "Continuar"}
-                  <svg
-                    className="h-6 w-6 shrink-0 animate-[arrowSlide_1.5s_infinite_ease-in-out] sm:h-7 sm:w-7"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    viewBox="0 0 24 24"
-                    aria-hidden={true}
-                  >
-                    <path d="M4 12h16" />
-                    <path d="m13 5 7 7-7 7" />
-                  </svg>
-                </Button>
-              </div>
-            </form>
-          </div>
-        ) : null}
-
-        {step === 2 ? (
-          <div
-            className={cn(
-              "flex w-full max-w-md flex-col self-center",
-              STEP_STACK_GAP,
-            )}
-          >
-            <form
-              className={cn("flex flex-col", STEP_STACK_GAP)}
-              onSubmit={onEmailSubmit}
-              noValidate
-            >
-              <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
-                {isEs
-                  ? "¡Genial! ¿Cuál es tu correo electrónico?"
-                  : "Ótimo! qual seu email?"}
-              </h1>
-
-              <div className="flex flex-col gap-3">
-                <label className="sr-only" htmlFor={emailId}>
-                  {isEs ? "Tu correo electrónico" : "Seu email"}
-                </label>
-                <input
-                  ref={emailInputRef}
-                  id={emailId}
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  maxLength={120}
-                  placeholder={isEs ? "Escribe tu correo electrónico" : "Digite seu email"}
-                  className={cn(
-                    "w-full rounded border bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-300/60",
-                    emailError ? "border-red-500 focus:border-red-500" : "border-[#9CA8B8] focus:border-[#7C8A9E]"
-                  )}
-                  onChange={() => {
-                    if (emailError) setEmailError("");
-                  }}
-                />
-                {emailError && (
-                  <p className="text-sm text-red-500 font-medium">
-                    {emailError}
-                  </p>
-                )}
-                <Button
-                  type="submit"
-                  formNoValidate
-                  className={cn(
-                    "group/quiz-cta h-auto w-full gap-2 rounded-lg border-0 bg-zinc-200 py-3.5 text-base font-semibold text-zinc-500 shadow-none",
-                    "hover:bg-zinc-300/80 hover:text-zinc-600 flex items-center justify-center",
-                  )}
-                >
-                  {isEs ? "Continuar" : "Continuar"}
-                  <svg
-                    className="h-6 w-6 shrink-0 animate-[arrowSlide_1.5s_infinite_ease-in-out] sm:h-7 sm:w-7"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    viewBox="0 0 24 24"
-                    aria-hidden={true}
-                  >
-                    <path d="M4 12h16" />
-                    <path d="m13 5 7 7-7 7" />
-                  </svg>
-                </Button>
-              </div>
-            </form>
           </div>
         ) : null}
 
@@ -900,13 +730,13 @@ export default function StrategySessionFunnel({
           >
             <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
               <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
-                {isEs ? "¿Cuál es tu tipo de negocio?" : "Qual é o seu tipo de negócio?"}
+                {isEs ? "¿En qué área de home services trabajas?" : "Em qual área de home services você trabalha?"}
               </h1>
-              
+
               <p className="text-base text-zinc-500 sm:text-lg">
                 {isEs
-                  ? "Te preguntamos esto primero para ver si haríamos un buen equipo. Y en segundo lugar, para identificar cuáles son las mejores estrategias de crecimiento dentro de tu presupuesto."
-                  : "Estamos perguntando isso primeiro para ver se seríamos uma boa combinação. E em segundo lugar, para identificar quais são as melhores estratégias de crescimento dentro do seu orçamento."}
+                  ? "Así ya sabemos si podemos ayudarte y qué estrategias tienen sentido para tu presupuesto."
+                  : "Assim já sabemos se podemos te ajudar e quais estratégias fazem sentido para o seu orçamento."}
               </p>
 
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
@@ -1093,6 +923,12 @@ export default function StrategySessionFunnel({
                   ? "¿Cuál es el sitio web de tu empresa?"
                   : "Qual é o site da sua empresa?"}
               </h1>
+
+              <p className="-mt-2 text-center text-sm text-zinc-500 sm:text-base">
+                {isEs
+                  ? "(Opcional. Si todavía no tienes sitio web, solo haz clic en Continuar.)"
+                  : "(Opcional. Se ainda não tem site, é só clicar em Continuar.)"}
+              </p>
 
               <div className="flex flex-col gap-3">
                 <label className="sr-only" htmlFor={websiteId}>
@@ -1292,8 +1128,8 @@ export default function StrategySessionFunnel({
             <div className={cn("flex flex-col text-center", STEP_STACK_GAP)}>
               <p className="text-sm font-medium text-zinc-500 sm:text-base">
                 {isEs
-                  ? `Ok ${firstName} lo lograste – última pregunta...`
-                  : `Ok ${firstName} você conseguiu – última pergunta...`}
+                  ? `Ok${firstName ? ` ${firstName}` : ","} lo lograste – última pregunta...`
+                  : `Ok${firstName ? ` ${firstName}` : ","} você conseguiu – última pergunta...`}
               </p>
 
               <h1 className="text-center text-[1.35rem] font-bold leading-snug text-black sm:text-2xl md:text-[1.65rem] md:leading-snug">
@@ -1371,6 +1207,32 @@ export default function StrategySessionFunnel({
                   onChange={(e) => setFinalForm(prev => ({ ...prev, lastName: e.target.value }))}
                   className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-500 focus:border-[#7C8A9E] focus:outline-none focus:ring-2 focus:ring-zinc-300/60"
                 />
+
+                {!hasEmail ? (
+                  <div className="flex flex-col gap-1.5">
+                    <input
+                      type="email"
+                      id="final-email"
+                      name="email"
+                      autoComplete="email"
+                      required
+                      maxLength={120}
+                      placeholder={isEs ? "Correo electrónico *" : "Email *"}
+                      value={finalForm.email}
+                      onChange={(e) => {
+                        setFinalForm(prev => ({ ...prev, email: e.target.value }));
+                        if (emailError) setEmailError("");
+                      }}
+                      className={cn(
+                        "w-full rounded border bg-white px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-300/60",
+                        emailError ? "border-red-500 focus:border-red-500" : "border-[#9CA8B8] focus:border-[#7C8A9E]"
+                      )}
+                    />
+                    {emailError ? (
+                      <p className="text-sm font-medium text-red-500">{emailError}</p>
+                    ) : null}
+                  </div>
+                ) : null}
 
                 <div className="w-full rounded border border-[#9CA8B8] bg-white px-4 py-3.5 text-base text-zinc-900 focus-within:border-[#7C8A9E] focus-within:ring-2 focus-within:ring-zinc-300/60">
                   <PhoneInput

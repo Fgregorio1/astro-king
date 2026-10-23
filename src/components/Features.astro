@@ -1,4 +1,6 @@
 ---
+import { formatUpdatedDate } from "../lib/updated-date";
+
 interface Props {
   lang?: "pt" | "es";
 }
@@ -6,137 +8,129 @@ interface Props {
 const { lang = "pt" } = Astro.props;
 const isEs = lang === "es";
 
-const now = new Date();
-const updatedDate = new Intl.DateTimeFormat(isEs ? "es-ES" : "pt-BR", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-}).format(now);
+// The page is prerendered, so this is only the build-time fallback.
+// The script below recalculates it from the visitor's clock.
+const locale = isEs ? "es-ES" : "pt-BR";
+const updatedDate = formatUpdatedDate(locale);
 
 const t = isEs
   ? {
-      updated: `Actualizado: ${updatedDate}`,
+      updated: "Actualizado:",
       salutation: "Querido dueño de negocio,",
 
       hook: "Ya estuvimos en tus zapatos.",
       line1: "Despertando antes del sol.",
       line2: "Herramientas en la camioneta. Café en la mano.",
-      line3: "Construyendo algo real — para tu familia, para tu futuro.",
+      line3: "Construyendo algo real para tu familia y tu futuro.",
 
       question: "¿Y hacer crecer un negocio en este país?",
       hard: "Es difícil. **Difícil, de ver*as.**",
 
-      pain1: "Probablemente estás preocupado de dónde va a venir el próximo cliente.",
-      pain2: "No cualquier cliente — uno que realmente valore tu trabajo.",
-      pain3: "Uno que no te subestime por tu acento o por tu nombre.",
+      pain1: "Vives pensando de dónde va a salir el próximo cliente.",
+      pain2:
+        "Y no cualquier cliente. Uno que valore tu trabajo y no te subestime por tu acento o tu nombre.",
 
       stressed:
         "Estresado. Durmiendo como bebé con cólicos y gallo en el mismo cuarto.",
 
-      everyoneHeader: "Y mientras tanto, todo el mundo tiene una opinión:",
+      everyoneHeader: "Y todo el mundo tiene una opinión:",
       voice1: '"Necesitas un sitio web, mano."',
-      voice2: '"Métete al TikTok — ¡es marketing gratis!"',
-      voice3:
-        '"Necesitas reseñas en Google, anuncios en Facebook, ¡un logo que se vea profesional!"',
+      voice2: '"Métete al TikTok, ¡es marketing gratis!"',
+      voice3: '"¡Reseñas en Google, anuncios en Facebook, un logo profesional!"',
 
-      selfIntro: "Y entonces empiezas a preguntarte:",
-      q1: "¿Debería postear en Instagram todos los días?",
-      q2: "¿Crear un perfil en Instagram?",
-      q3: "¿Correr anuncios en Google?",
-      q4: "¿Montar un programa de referidos?",
-      q5: "¿Gastar $3k en un logo?",
+      selfIntro: "Y entonces llega la duda:",
+      q1: "¿Postear en Instagram todos los días?",
+      q2: "¿Correr anuncios en Google?",
+      q3: "¿Montar un programa de referidos?",
+      q4: "¿Gastar $3k en un logo?",
 
       scream: "*por el amor de Dios, que alguien me ayude*",
 
       notAlone:
-        "Mira — a la mayoría de los dueños de negocios de servicios que están empezando les pasa esto…",
-      confused1: "Es un sentimiento confuso…",
-      confused2: 'Mezclado con "tengo que hacerlo todo solo"…',
-      confused3: 'Sazonado con "no sé en quién confiar."',
+        "Mira, casi todo dueño de un negocio de servicios pasa por esto al empezar.",
+      confused:
+        'Es una confusión mezclada con "tengo que hacerlo todo solo" y sazonada con "no sé en quién confiar".',
 
       syndrome:
         "Le llamamos a esto **el síndrome del Inmigrante**.",
 
       describe1:
-        "Una zona caliente, sofocante y confusa donde crees que eres empresario porque abriste una LLC — pero te convertiste en el empleado peor pagado de la empresa.",
+        "Abriste una LLC y crees que eres empresario. En realidad, te convertiste en el empleado peor pagado de tu propia empresa.",
       describe2:
-        "Y piensas que vender tu trabajo 40% más barato para no tener el calendario vacío va a resolver tus problemas.",
+        "Y crees que cobrar 40% menos para llenar la agenda va a resolverlo todo.",
 
-      bridge: "Pero aquí va la verdad — **existe una solución**.",
+      bridge: "Pero la verdad es que **existe una solución**.",
 
       heroIntro:
-        "Tal vez no lo sepas, pero en los ojos de un Americano, eres un **súper héroe**.",
-      heroParen: "(Y la persona correcta para resolver sus problemas.)",
+        "Quizás no lo sepas, pero a los ojos de un americano eres un **súper héroe**.",
+      heroParen: "(La persona correcta para resolver su problema.)",
 
       traits: "Tu habilidad. Tu confiabilidad. Tu palabra.",
       traitsGold: "**Eso es oro.**",
 
       promise:
-        "Solo necesitas el sistema correcto para transformar eso en un flujo constante de clientes, reseñas de 5 estrellas y referidos — sin el caos.",
+        "Solo te falta el sistema correcto para convertir eso en clientes constantes, reseñas de 5 estrellas y referidos. Sin caos.",
 
-      closing: "Todo comienza eligiendo tu camino a continuación…",
+      closing: "Todo comienza eligiendo tu camino a continuación.",
     }
   : {
-      updated: `Atualizado: ${updatedDate}`,
+      updated: "Atualizado:",
       salutation: "Querido empresário,",
 
-      hook: "Já estive na sua pele",
+      hook: "Já estive na sua pele.",
       line1: "Acordando antes do sol.",
       line2: "Ferramentas no carro. Café na mão.",
-      line3: "Construindo algo real — pra sua família, pro seu futuro.",
+      line3: "Construindo algo real pra sua família e pro seu futuro.",
 
       question: "E fazer um negócio crescer nesse país?",
       hard: "É difícil. **Difícil, pra c*ralho.**",
 
-      pain1: "Você provavelmente está preocupado de onde vai vir o próximo cliente.",
-      pain2: "Não qualquer cliente — um que realmente valorize o seu trabalho.",
-      pain3: "Um que não te subestime por causa do seu sotaque ou do seu nome.",
+      pain1: "Você vive pensando de onde vai vir o próximo cliente.",
+      pain2:
+        "E não qualquer cliente. Um que valorize seu trabalho e não te subestime pelo sotaque ou pelo nome.",
 
       stressed:
         "Estressado. Dormindo igual bebê com cólica e galo no mesmo quarto.",
 
-      everyoneHeader: "E enquanto isso, todo mundo tem uma opinião:",
+      everyoneHeader: "E todo mundo tem uma opinião:",
       voice1: '"Você precisa de um site, mano."',
-      voice2: '"Entra no TikTok — é marketing de graça!"',
-      voice3:
-        '"Precisa de avaliações no Google, anúncio no Facebook, um logo que pareça profissional!"',
+      voice2: '"Entra no TikTok, é marketing de graça!"',
+      voice3: '"Avaliação no Google, anúncio no Facebook, um logo profissional!"',
 
-      selfIntro: "E aí você começa a se perguntar:",
-      q1: "Devo postar no Instagram todo dia?",
-      q2: "Criar perfil no Instagram?",
-      q3: "Rodar anúncio no Google?",
-      q4: "Montar um programa de indicações?",
-      q5: "Gastar $3k num logo?",
+      selfIntro: "E aí vem a dúvida:",
+      q1: "Postar no Instagram todo dia?",
+      q2: "Rodar anúncio no Google?",
+      q3: "Montar um programa de indicações?",
+      q4: "Gastar $3k num logo?",
 
       scream: "*pelo amor de Deus, alguém me ajuda*",
 
       notAlone:
-        "Olha — a maioria dos donos de negócios de serviços que estão começando passa por isso…",
-      confused1: "É um sentimento confuso…",
-      confused2: 'Misturado com "tenho que fazer tudo sozinho"…',
-      confused3: 'Temperado com "não sei em quem confiar."',
+        "Olha, quase todo dono de negócio de serviços passa por isso no começo.",
+      confused:
+        'É uma confusão misturada com "tenho que fazer tudo sozinho" e temperada com "não sei em quem confiar".',
 
       syndrome:
         "A gente chama isso de **síndrome do Imigrante**.",
 
       describe1:
-        "Uma zona quente, abafada e confusa onde você acha que é empresário porque abriu uma LLC — mas virou o empregado menos pago da empresa.",
+        "Você abriu uma LLC e acha que virou empresário. Na real, virou o funcionário mais mal pago da própria empresa.",
       describe2:
-        "E acha que vender seu trabalho 40% mais barato pra não ficar com o calendário vazio vai resolver seus problemas.",
+        "E acredita que cobrar 40% mais barato pra encher a agenda vai resolver tudo.",
 
-      bridge: "Mas aqui vai a verdade — **existe uma solução**.",
+      bridge: "Mas a verdade é que **existe uma solução**.",
 
       heroIntro:
-        "Talvez você não saiba, mas nos olhos de um Americano, você é um **super herói**.",
-      heroParen: "(E a pessoa certa que vai resolver os problemas dele.)",
+        "Talvez você não saiba, mas aos olhos de um americano você é um **super herói**.",
+      heroParen: "(A pessoa certa pra resolver o problema dele.)",
 
       traits: "Sua habilidade. Sua confiabilidade. Sua palavra.",
       traitsGold: "**Isso é ouro.**",
 
       promise:
-        "Você só precisa do sistema certo pra transformar isso num fluxo constante de clientes, avaliações 5 estrelas e indicações — sem o caos.",
+        "Só falta o sistema certo pra transformar isso em clientes constantes, avaliações 5 estrelas e indicações. Sem caos.",
 
-      closing: "Tudo começa escolhendo o seu caminho abaixo…",
+      closing: "Tudo começa escolhendo o seu caminho abaixo.",
     };
 
 // Inline markdown-ish renderer: **bold** and *italic* → HTML.
@@ -154,7 +148,7 @@ function renderInline(s: string): string {
   <div class="container mx-auto px-4">
     <article class="mx-auto max-w-2xl font-sans text-zinc-800">
       <p class="mb-10 text-sm font-medium uppercase tracking-widest text-zinc-500">
-        {t.updated}
+        {t.updated} <time data-updated-date data-locale={locale}>{updatedDate}</time>
       </p>
 
       <p class="mb-6 text-[1.1rem] md:text-[1.5rem] font-medium text-zinc-900">
@@ -173,7 +167,6 @@ function renderInline(s: string): string {
 
         <p>{t.pain1}</p>
         <p>{t.pain2}</p>
-        <p>{t.pain3}</p>
 
         <p>{t.stressed}</p>
 
@@ -189,14 +182,11 @@ function renderInline(s: string): string {
         <p>{t.q2}</p>
         <p>{t.q3}</p>
         <p>{t.q4}</p>
-        <p>{t.q5}</p>
 
         <p set:html={renderInline(t.scream)} />
 
         <p>{t.notAlone}</p>
-        <p>{t.confused1}</p>
-        <p>{t.confused2}</p>
-        <p>{t.confused3}</p>
+        <p>{t.confused}</p>
 
         <p set:html={renderInline(t.syndrome)} />
 
@@ -218,3 +208,11 @@ function renderInline(s: string): string {
     </article>
   </div>
 </section>
+
+<script>
+  import { formatUpdatedDate } from "../lib/updated-date";
+
+  document.querySelectorAll<HTMLElement>("[data-updated-date]").forEach((el) => {
+    el.textContent = formatUpdatedDate(el.dataset.locale || "pt-BR");
+  });
+</script>
